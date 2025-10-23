@@ -1,106 +1,16 @@
-    <!-- Add Car Ticket Modal -->
-    <div id="addCarModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>ကားလက်မှတ်တင်ရန်</h2>
-                <button class="close-btn" onclick="closeAddCarModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <form id="carForm" onsubmit="submitCar(event)">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>မှ (ထွက်ခွာမည့်နေရာ) *</label>
-                            <input type="text" id="carFrom" required placeholder="ဥပမာ - ရန်ကုန်">
-                        </div>
-                        <div class="form-group">
-                            <label>သို့ (ရောက်မည့်နေရာ) *</label>
-                            <input type="text" id="carTo" required placeholder="ဥပမာ - မန္တလေး">
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>ထွက်ခွာမည့်ရက် *</label>
-                            <input type="date" id="carDepartDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label>ထွက်ခွာမည့်အချိန် *</label>
-                            <input type="time" id="carDepartTime" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ကားအမျိုးအစား *</label>
-                        <select id="carType" required>
-                            <option value="sedan">ဆီဒန်</option>
-                            <option value="suv">SUV</option>
-                            <option value="van">ဗန် / မီနီဘတ်စ်</option>
-                            <option value="bus">ဘတ်စ်ကား</option>
-                            <option value="luxury">ဇိမ်ခံကား</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ဝန်ဆောင်မှုအမျိုးအစား *</label>
-                        <select id="carServiceType" required>
-                            <option value="shared">ပူးတွဲစီး</option>
-                            <option value="private">သီးသန့်ငှား</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>လက်ကျန်ခုံနေရာ *</label>
-                        <input type="number" id="carSeats" required min="1" placeholder="ဥပမာ - 4">
-                    </div>
-
-                    <div class="form-group">
-                        <label>စျေးနှုန်း တစ်ဦးချင်း (ကျပ်) *</label>
-                        <input type="number" id="carPrice" required placeholder="ဥပမာ - 25000">
-                        <div class="helper-text">တစ်ခုံနေရာ မြန်မာကျပ်ဖြင့်ဖြည့်ပါ</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>တင်ခွင့်နေရာ *</label>
-                        <input type="text" id="carPickup" required placeholder="ဥပမာ - မြို့လယ်ဘတ်စ်ကားဂိတ်">
-                    </div>
-
-                    <div class="form-group">
-                        <label>ဆင်းခွင့်နေရာ *</label>
-                        <input type="text" id="carDropoff" required placeholder="ဥပမာ - မြို့လယ်">
-                    </div>
-
-                    <div class="form-group">
-                        <label>အပိုအသေးစိတ်</label>
-                        <textarea id="carDetails" placeholder="လေအေး / မပါ၊ ခရီးဆောင်အိတ်နေရာ၊ လမ်းတစ်လျှောက်ရပ်နားမှုများ စသည်..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ယာဉ်မောင်း / ကုမ္ပဏီအမည် *</label>
-                        <input type="text" id="carDriverName" required placeholder="သင့်အမည် သို့မဟုတ် ကုမ္ပဏီအမည်">
-                    </div>
-
-                    <div class="form-group">
-                        <label>ဖုန်းနံပါတ် *</label>
-                        <input type="tel" id="carDriverPhone" required placeholder="ဥပမာ - 09-123-456-789">
-                    </div>
-
-                    <div class="form-group">
-                        <label>အီးမေးလ် (စိတ်ကြိုက်)</label>
-                        <input type="email" id="carDriverEmail" placeholder="your.email@example.com">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">🚗 တင်မည်</button>
-                </form>
-            </div>
-        </div>
-    </div><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawei Marketplace - Properties & Air Tickets</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1nQ2lcA2kZpmeG6sTQT4WHyrbwd1LPpI&libraries=places&callback=initMap" async defer></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <title>Dawei Marketplace - Properties, Air & Car Tickets</title>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1nQ2lcA2kZpmeG6sTQT4WHyrbwd1LPpI&libraries=places" async defer></script>
+    
     <style>
         * {
             margin: 0;
@@ -109,7 +19,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             overflow: hidden;
         }
 
@@ -149,34 +59,6 @@
             margin-bottom: 15px;
         }
 
-        .view-toggle {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 15px;
-            background: #f3f4f6;
-            padding: 4px;
-            border-radius: 8px;
-        }
-
-        .view-btn {
-            flex: 1;
-            padding: 6px 10px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #6b7280;
-        }
-
-        .view-btn.active {
-            background: white;
-            color: #3B82F6;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
         .tab-btn {
             flex: 1;
             padding: 8px 12px;
@@ -194,19 +76,6 @@
             background: #3B82F6;
             color: white;
             border-color: #3B82F6;
-        }
-
-        .tab-btn:hover {
-            border-color: #3B82F6;
-        }
-
-        .header-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #374151;
-            margin-bottom: 15px;
         }
 
         .add-btn {
@@ -246,88 +115,6 @@
             display: block;
         }
 
-        .properties-list-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 450px;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 10;
-            display: none;
-        }
-
-        .properties-list-panel.active {
-            display: block;
-        }
-
-        .properties-list-panel h2 {
-            font-size: 20px;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 15px;
-        }
-
-        .property-list-card {
-            background: #f9fafb;
-            border-radius: 8px;
-            padding: 0;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            overflow: hidden;
-        }
-
-        .property-list-card:hover {
-            border-color: #3B82F6;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .property-list-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-        }
-
-        .property-list-content {
-            padding: 12px;
-        }
-
-        .property-list-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 6px;
-        }
-
-        .property-list-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: #3B82F6;
-            margin-bottom: 6px;
-        }
-
-        .property-list-address {
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .property-list-features {
-            display: flex;
-            gap: 12px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-
         .tickets-panel h2 {
             font-size: 20px;
             font-weight: bold;
@@ -357,67 +144,11 @@
             margin-bottom: 8px;
         }
 
-        .ticket-date {
-            font-size: 14px;
-            color: #6b7280;
-            margin-bottom: 8px;
-        }
-
         .ticket-price {
             font-size: 20px;
             font-weight: 700;
             color: #3B82F6;
             margin-bottom: 8px;
-        }
-
-        .ticket-seller {
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 16px;
-            z-index: 10;
-        }
-
-        .legend-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 10px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .legend-marker {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #3B82F6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .legend-note {
-            font-size: 12px;
-            color: #6b7280;
         }
 
         .modal {
@@ -446,7 +177,6 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .modal-header {
@@ -461,12 +191,6 @@
             z-index: 10;
         }
 
-        .modal-header h2 {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1f2937;
-        }
-
         .close-btn {
             background: transparent;
             border: none;
@@ -476,13 +200,6 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-btn:hover {
-            background: #f3f4f6;
         }
 
         .modal-body {
@@ -509,20 +226,6 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 14px;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #3B82F6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
         }
 
         .form-row {
@@ -531,161 +234,15 @@
             gap: 16px;
         }
 
-        .image-preview {
-            width: 100%;
-            height: 200px;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            font-size: 14px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-
-        .image-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-            width: 100%;
-        }
-
         .btn-primary {
+            width: 100%;
             background: #3B82F6;
             color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2563eb;
-        }
-
-        .btn-secondary {
-            background: #e5e7eb;
-            color: #1f2937;
-        }
-
-        .btn-secondary:hover {
-            background: #d1d5db;
-        }
-
-        .property-detail-modal .modal-content {
-            max-width: 900px;
-        }
-
-        .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            padding: 20px;
-        }
-
-        .image-gallery img {
-            width: 100%;
+            border: none;
+            padding: 12px;
             border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .image-gallery img:first-child {
-            grid-column: span 2;
-            height: 400px;
-        }
-
-        .image-gallery img:not(:first-child) {
-            height: 200px;
-        }
-
-        .price-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 24px;
-        }
-
-        .price {
-            font-size: 36px;
-            font-weight: bold;
-            color: #3B82F6;
-            margin-bottom: 8px;
-        }
-
-        .address {
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            padding: 16px;
-            background: #f9fafb;
-            border-radius: 8px;
-            margin-bottom: 24px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .feature-label {
-            font-size: 12px;
-            color: #6b7280;
-        }
-
-        .feature-value {
             font-weight: 600;
-            color: #1f2937;
-        }
-
-        .description-section h3 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
-        }
-
-        .description-section p {
-            color: #374151;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
-
-        .contact-info {
-            background: #f9fafb;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-        }
-
-        .contact-info h3 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
-        }
-
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            color: #374151;
+            cursor: pointer;
         }
 
         .helper-text {
@@ -694,110 +251,10 @@
             margin-top: 4px;
         }
 
-        /* Google Places Autocomplete styling */
-        .pac-container {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-top: 4px;
-            z-index: 10001 !important;
-        }
-
-        .pac-item {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .pac-item:hover {
-            background-color: #f3f4f6;
-        }
-
-        .pac-icon {
-            margin-right: 8px;
-        }
-        
-        .pac-item-query {
-            font-size: 14px;
-        }
-
-        .ticket-detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .ticket-detail-label {
-            font-weight: 600;
-            color: #6b7280;
-        }
-
-        .ticket-detail-value {
-            color: #1f2937;
-            font-weight: 500;
-        }
-
-        /* Login Modal */
-        .login-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-overlay.active {
-            display: flex;
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 400px;
-            width: 90%;
+        .loading {
             text-align: center;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-
-        .login-box h2 {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1f2937;
-            margin-bottom: 10px;
-        }
-
-        .login-box p {
+            padding: 20px;
             color: #6b7280;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .google-signin-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            padding: 12px 24px;
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #1f2937;
-        }
-
-        .google-signin-btn:hover {
-            background: #f9fafb;
-            border-color: #3B82F6;
         }
 
         .user-profile {
@@ -812,35 +269,10 @@
             align-items: center;
             gap: 12px;
             z-index: 10;
-            cursor: pointer;
         }
 
         .user-profile.active {
             display: flex;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 14px;
-        }
-
-        .user-email {
-            font-size: 12px;
-            color: #6b7280;
         }
 
         .logout-btn {
@@ -852,130 +284,20 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
-        .logout-btn:hover {
-            background: #dc2626;
-        }
-
-        .posted-by {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .posted-by img {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-
-        .login-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .login-tab {
-            flex: 1;
-            padding: 10px;
-            background: transparent;
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: #6b7280;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.2s;
-        }
-
-        .login-tab.active {
-            color: #3B82F6;
-            border-bottom-color: #3B82F6;
-        }
-
-        .login-method {
-            display: none;
-        }
-
-        .login-method.active {
-            display: block;
-        }
-
-        .phone-input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-
-        .phone-input-group select {
-            width: 100px;
-            padding: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
+        .login-box {
             background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
         }
 
-        .phone-input-group input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .phone-input-group input:focus,
-        .phone-input-group select:focus {
-            outline: none;
-            border-color: #3B82F6;
-        }
-
-        .verification-input {
+        .auth-btn {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 16px;
-            text-align: center;
-            letter-spacing: 8px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .verification-input:focus {
-            outline: none;
-            border-color: #3B82F6;
-        }
-
-        .verification-timer {
-            text-align: center;
-            color: #6b7280;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .resend-link {
-            color: #3B82F6;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .resend-link.disabled {
-            color: #9ca3af;
-            cursor: not-allowed;
-            text-decoration: none;
-        }
-
-        .phone-signin-btn {
-            width: 100%;
-            padding: 12px 24px;
             background: #3B82F6;
             color: white;
             border: none;
@@ -983,225 +305,168 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            margin-bottom: 10px;
         }
 
-        .phone-signin-btn:hover {
-            background: #2563eb;
+        .setup-notice {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            z-index: 10000;
+            display: none;
         }
 
-        .phone-signin-btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
+        .setup-notice.active {
+            display: block;
+        }
+
+        .setup-notice h2 {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+
+        .setup-notice code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .setup-notice ol {
+            text-align: left;
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .setup-notice li {
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <!-- Login Overlay (only shows when posting) -->
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-box">
-            <h2>Sign In to Post</h2>
-            <p>Sellers need to sign in to post properties and air tickets</p>
-            
-            <div class="login-tabs">
-                <button class="login-tab active" onclick="switchLoginMethod('google')">Google</button>
-                <button class="login-tab" onclick="switchLoginMethod('phone')">Phone Number</button>
-            </div>
-
-            <!-- Google Sign-In -->
-            <div class="login-method active" id="googleLogin">
-                <div id="g_id_onload"
-                     data-client_id="YOUR_GOOGLE_CLIENT_ID"
-                     data-callback="handleCredentialResponse">
-                </div>
-                <button class="google-signin-btn" onclick="promptGoogleSignIn()">
-                    <svg width="20" height="20" viewBox="0 0 20 20">
-                        <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
-                        <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
-                        <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
-                        <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
-                    </svg>
-                    Sign in with Google
-                </button>
-            </div>
-
-            <!-- Phone Sign-In -->
-            <div class="login-method" id="phoneLogin">
-                <div id="phoneNumberStep">
-                    <div class="phone-input-group">
-                        <select id="countryCode">
-                            <option value="+95">🇲🇲 +95</option>
-                            <option value="+1">🇺🇸 +1</option>
-                            <option value="+66">🇹🇭 +66</option>
-                            <option value="+65">🇸🇬 +65</option>
-                            <option value="+60">🇲🇾 +60</option>
-                            <option value="+91">🇮🇳 +91</option>
-                        </select>
-                        <input type="tel" id="phoneNumber" placeholder="9123456789" maxlength="15" />
-                    </div>
-                    <button class="phone-signin-btn" onclick="sendVerificationCode()">Send Verification Code</button>
-                </div>
-
-                <div id="verificationStep" style="display: none;">
-                    <p style="margin-bottom: 16px; color: #6b7280; font-size: 14px;">
-                        Enter the 6-digit code sent to <strong id="sentToNumber"></strong>
-                    </p>
-                    <input type="text" class="verification-input" id="verificationCode" placeholder="000000" maxlength="6" />
-                    <div class="verification-timer">
-                        <span id="timerText">Resend code in <strong id="timer">60</strong>s</span>
-                        <br>
-                        <span class="resend-link disabled" id="resendLink" onclick="resendCode()">Resend Code</span>
-                    </div>
-                    <button class="phone-signin-btn" onclick="verifyCode()">Verify & Sign In</button>
-                    <button class="btn btn-secondary" onclick="backToPhoneNumber()" style="margin-top: 8px;">Change Number</button>
-                </div>
-            </div>
-
-            <button class="btn btn-secondary" onclick="closeLoginOverlay()" style="margin-top: 12px;">Cancel</button>
-        </div>
-    </div>
-
-    <!-- User Profile -->
-    <div class="user-profile" id="userProfile">
-        <img id="userAvatar" class="user-avatar" src="" alt="User">
-        <div class="user-info">
-            <div id="userName" class="user-name"></div>
-            <div id="userEmail" class="user-email"></div>
-        </div>
-        <button class="logout-btn" onclick="logout()">Logout</button>
+    <!-- Setup Notice -->
+    <div class="setup-notice active" id="setupNotice">
+        <h2>⚙️ Supabase Setup Required</h2>
+        <p style="margin-bottom: 20px;">Please configure your Supabase credentials in the code:</p>
+        <ol>
+            <li>Find <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in the script</li>
+            <li>Replace with your actual Supabase project credentials</li>
+            <li>Follow the setup instructions provided separately</li>
+        </ol>
+        <button class="auth-btn" onclick="document.getElementById('setupNotice').style.display='none'">I'll Set This Up</button>
     </div>
 
     <div id="map"></div>
 
     <div class="header">
         <h1>Dawei Marketplace</h1>
-        <p>Properties & Air Tickets</p>
+        <p>Properties, Air & Car Tickets</p>
         
         <div class="category-tabs">
-            <button class="tab-btn active" onclick="switchCategory('properties')">🏠 အိမ်ခြံမြေ</button>
-            <button class="tab-btn" onclick="switchCategory('tickets')">✈️ လေယာဉ်လက်မှတ်</button>
-            <button class="tab-btn" onclick="switchCategory('cars')">🚗 ကားလက်မှတ်</button>
+            <button class="tab-btn active" onclick="switchCategory('properties')">🏠 Properties</button>
+            <button class="tab-btn" onclick="switchCategory('tickets')">✈️ Air</button>
+            <button class="tab-btn" onclick="switchCategory('cars')">🚗 Cars</button>
         </div>
 
-        <div class="view-toggle" id="viewToggle">
-            <button class="view-btn active" onclick="switchView('map')">🗺️ Map</button>
-            <button class="view-btn" onclick="switchView('list')">📋 List</button>
+        <div id="itemCount" style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
+            Loading...
         </div>
 
-        <div class="header-info" id="itemCount">
-            <span>📍</span>
-            <span>0 properties available</span>
+        <button class="add-btn" id="addPropertyBtn" onclick="openAddPropertyModal()">➕ Post Property</button>
+        <button class="add-btn" id="addTicketBtn" onclick="openAddTicketModal()" style="display:none;">➕ Post Air Ticket</button>
+        <button class="add-btn" id="addCarBtn" onclick="openAddCarModal()" style="display:none;">➕ Post Car Ticket</button>
+        
+        <div style="margin-top: 15px;">
+            <button class="auth-btn" id="loginBtn" onclick="signInWithEmail()">Sign In</button>
+            <button class="auth-btn" id="signupBtn" onclick="signUpWithEmail()" style="background: #10b981;">Sign Up</button>
         </div>
-        <button class="add-btn" id="addPropertyBtn" onclick="openAddPropertyModal()">➕ အိမ်ခြံမြေတင်မည်</button>
-        <button class="add-btn" id="addTicketBtn" onclick="openAddTicketModal()" style="display:none;">➕ လေယာဉ်လက်မှတ်တင်မည်</button>
-        <button class="add-btn" id="addCarBtn" onclick="openAddCarModal()" style="display:none;">➕ ကားလက်မှတ်တင်မည်</button>
     </div>
 
-    <!-- Properties List Panel -->
-    <div class="properties-list-panel" id="propertiesListPanel">
-        <h2>🏠 အိမ်ခြံမြေစာရင်း</h2>
-        <div id="propertiesList"></div>
+    <!-- User Profile -->
+    <div class="user-profile" id="userProfile">
+        <div>
+            <div id="userName" style="font-weight: 600; color: #1f2937;"></div>
+            <div id="userEmail" style="font-size: 12px; color: #6b7280;"></div>
+        </div>
+        <button class="logout-btn" onclick="signOut()">Logout</button>
     </div>
 
     <!-- Tickets Panel -->
     <div class="tickets-panel" id="ticketsPanel">
-        <h2>✈️ လေယာဉ်လက်မှတ်များ</h2>
-        <div id="ticketsList"></div>
+        <h2>✈️ Air Tickets</h2>
+        <div id="ticketsList"><div class="loading">Loading tickets...</div></div>
     </div>
 
-    <!-- Car Tickets Panel -->
+    <!-- Cars Panel -->
     <div class="tickets-panel" id="carsPanel">
-        <h2>🚗 ကားလက်မှတ်များ</h2>
-        <div id="carsList"></div>
-    </div>
-
-    <div class="legend" id="propertyLegend">
-        <div class="legend-title">မြေပုံအညွှန်း</div>
-        <div class="legend-item">
-            <div class="legend-marker">$</div>
-            <span>အိမ်ခြံမြေတည်နေရာနှင့် ဈေးနှုန်း</span>
-        </div>
-        <div class="legend-note">Hover ဖြင့်အသေးစိတ် • နှိပ်၍ အပြည့်အစုံကြည့်ရှုရန်</div>
+        <h2>🚗 Car Tickets</h2>
+        <div id="carsList"><div class="loading">Loading car tickets...</div></div>
     </div>
 
     <!-- Add Property Modal -->
     <div id="addPropertyModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>အိမ်ခြံမြေတင်ရန်</h2>
+                <h2>Post Property</h2>
                 <button class="close-btn" onclick="closeAddPropertyModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="propertyForm" onsubmit="submitProperty(event)">
                     <div class="form-group">
-                        <label>ခေါင်းစဉ် *</label>
-                        <input type="text" id="title" required placeholder="ဥပမာ - မြို့လယ်ခေတ်မီဆိုင်ခန်း">
+                        <label>Title *</label>
+                        <input type="text" id="title" required>
                     </div>
 
                     <div class="form-group">
-                        <label>စျေးနှုန်း (သိန်း) *</label>
-                        <input type="number" id="price" required placeholder="ဥပမာ - 3500">
-                        <div class="helper-text">သိန်းဖြင့်ဖြည့်ပါ။ ဥပမာ - 3500 = ၃၅၀၀ သိန်း</div>
+                        <label>Price (Lakh) *</label>
+                        <input type="number" id="price" required>
+                        <div class="helper-text">Enter in lakh (100,000)</div>
                     </div>
 
                     <div class="form-group">
-                        <label>လိပ်စာအပြည့်အစုံ (မြေပုံအတွက်) *</label>
-                        <input type="text" id="fullAddress" required placeholder="စရိုက်ကို စတင်ရိုက်ထည့်ပါ - ဥပမာ - ရေးလမ်း၊ မင်းလမ်း...">
-                        <div class="helper-text">🔍 စတင်ရိုက်ပါ၊ တည်နေရာများပေါ်လာပါမည်။ မြေပုံပေါ်တွင် တိကျစွာထည့်ရန်</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>လိပ်စာတိုအား (ပြသရန်)</label>
-                        <input type="text" id="address" placeholder="ဥပမာ - ရေးလမ်း၊ ထားဝယ်">
-                        <div class="helper-text">ဤလိပ်စာတိုကို စာရင်းပေါ်တွင် ပြသပါမည်</div>
+                        <label>Full Address (for map) *</label>
+                        <input type="text" id="fullAddress" required>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>အိပ်ခန်း</label>
+                            <label>Bedrooms</label>
                             <input type="number" id="beds" min="0" value="2">
                         </div>
                         <div class="form-group">
-                            <label>ရေချိုးခန်း</label>
+                            <label>Bathrooms</label>
                             <input type="number" id="baths" min="0" value="1">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>စတုရန်းပေ</label>
-                        <input type="number" id="sqft" min="0" placeholder="ဥပမာ - 1500">
+                        <label>Square Feet</label>
+                        <input type="number" id="sqft" min="0">
                     </div>
 
                     <div class="form-group">
-                        <label>အသေးစိတ် *</label>
-                        <textarea id="description" required placeholder="သင့်အိမ်ခြံမြေ၏ အင်္ဂါရပ်များနှင့် တည်နေရာ အကျိုးကျေးဇူးများကို ဖော်ပြပါ..."></textarea>
+                        <label>Description *</label>
+                        <textarea id="description" required rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>ဆက်သွယ်ရန် အမည် *</label>
-                        <input type="text" id="contactName" required placeholder="သင့်အမည် သို့မဟုတ် စီးပွားရေးအမည်">
+                        <label>Contact Phone *</label>
+                        <input type="tel" id="contactPhone" required>
                     </div>
 
                     <div class="form-group">
-                        <label>ဖုန်းနံပါတ် *</label>
-                        <input type="tel" id="contactPhone" required placeholder="ဥပမာ - 09-123-456-789">
+                        <label>Image URL *</label>
+                        <input type="url" id="imageUrl" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>အီးမေးလ် (စိတ်ကြိုက်)</label>
-                        <input type="email" id="contactEmail" placeholder="your.email@example.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label>ပုံ URL *</label>
-                        <input type="url" id="imageUrl" required placeholder="https://..." onchange="previewImage()">
-                        <div class="helper-text">သင့်ပုံကို imgur.com သို့ တင်ပြီး လင့်ခ်ကို ကူးထည့်ပါ</div>
-                        <div id="imagePreview" class="image-preview">
-                            ပုံကြိုတင်ကြည့်ရှုမှု ဤနေရာတွင် ပေါ်လာမည်
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">📤 တင်မည်</button>
+                    <button type="submit" class="btn-primary">📤 Post Property</button>
                 </form>
             </div>
         </div>
@@ -1211,93 +476,55 @@
     <div id="addTicketModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>လေယာဉ်လက်မှတ်တင်ရန်</h2>
+                <h2>Post Air Ticket</h2>
                 <button class="close-btn" onclick="closeAddTicketModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="ticketForm" onsubmit="submitTicket(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>မှ (ထွက်ခွာမည့်နေရာ) *</label>
-                            <input type="text" id="ticketFrom" required placeholder="ဥပမာ - ရန်ကုန်">
+                            <label>From *</label>
+                            <input type="text" id="ticketFrom" required>
                         </div>
                         <div class="form-group">
-                            <label>သို့ (ရောက်မည့်နေရာ) *</label>
-                            <input type="text" id="ticketTo" required placeholder="ဥပမာ - ဘန်ကောက်">
+                            <label>To *</label>
+                            <input type="text" id="ticketTo" required>
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>ထွက်ခွာမည့်ရက် *</label>
+                            <label>Departure Date *</label>
                             <input type="date" id="ticketDepartDate" required>
                         </div>
                         <div class="form-group">
-                            <label>ပြန်လာမည့်ရက် (စိတ်ကြိုက်)</label>
+                            <label>Return Date</label>
                             <input type="date" id="ticketReturnDate">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>လေကြောင်းလိုင်း</label>
-                        <input type="text" id="ticketAirline" placeholder="ဥပမာ - မြန်မာအေးယားဝေး၊ ထိုင်းအေးယားဝေး">
+                        <label>Airline</label>
+                        <input type="text" id="ticketAirline">
                     </div>
 
                     <div class="form-group">
-                        <label>ပျံသန်းမှုအမျိုးအစား *</label>
-                        <select id="ticketType" required>
-                            <option value="one-way">တစ်ဖက်သွား</option>
-                            <option value="round-trip">အပြန်အလှန်</option>
-                        </select>
+                        <label>Price (MMK) *</label>
+                        <input type="number" id="ticketPrice" required>
                     </div>
 
                     <div class="form-group">
-                        <label>အတန်း</label>
-                        <select id="ticketClass">
-                            <option value="economy">စီးပွားရေး</option>
-                            <option value="business">စီးပွားရေးလုပ်ငန်း</option>
-                            <option value="first">ပထမတန်း</option>
-                        </select>
+                        <label>Contact Phone *</label>
+                        <input type="tel" id="ticketPhone" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>စျေးနှုန်း (ကျပ်) *</label>
-                        <input type="number" id="ticketPrice" required placeholder="ဥပမာ - 250000">
-                        <div class="helper-text">မြန်မာကျပ်ဖြင့်ဖြည့်ပါ</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ရရှိနိုင်သော လက်မှတ်အရေအတွက်</label>
-                        <input type="number" id="ticketQuantity" min="1" value="1" placeholder="ဥပမာ - 2">
-                    </div>
-
-                    <div class="form-group">
-                        <label>အပိုအသေးစိတ်</label>
-                        <textarea id="ticketDetails" placeholder="အိတ်ဆောင်ခွင့်၊ ရပ်နားမှုများ၊ အစာဝန်ဆောင်မှု စသည်..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>ရောင်းချသူအမည် *</label>
-                        <input type="text" id="ticketSellerName" required placeholder="သင့်အမည် သို့မဟုတ် အေဂျင်စီအမည်">
-                    </div>
-
-                    <div class="form-group">
-                        <label>ဖုန်းနံပါတ် *</label>
-                        <input type="tel" id="ticketSellerPhone" required placeholder="ဥပမာ - 09-123-456-789">
-                    </div>
-
-                    <div class="form-group">
-                        <label>အီးမေးလ် (စိတ်ကြိုက်)</label>
-                        <input type="email" id="ticketSellerEmail" placeholder="your.email@example.com">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">✈️ တင်မည်</button>
+                    <button type="submit" class="btn-primary">✈️ Post Ticket</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Add Car Ticket Modal -->
+    <!-- Add Car Modal -->
     <div id="addCarModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1308,12 +535,12 @@
                 <form id="carForm" onsubmit="submitCar(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>From (Departure) *</label>
-                            <input type="text" id="carFrom" required placeholder="e.g., Yangon">
+                            <label>From *</label>
+                            <input type="text" id="carFrom" required>
                         </div>
                         <div class="form-group">
-                            <label>To (Destination) *</label>
-                            <input type="text" id="carTo" required placeholder="e.g., Mandalay">
+                            <label>To *</label>
+                            <input type="text" id="carTo" required>
                         </div>
                     </div>
 
@@ -1333,346 +560,86 @@
                         <select id="carType" required>
                             <option value="sedan">Sedan</option>
                             <option value="suv">SUV</option>
-                            <option value="van">Van/Minibus</option>
+                            <option value="van">Van</option>
                             <option value="bus">Bus</option>
-                            <option value="luxury">Luxury Car</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Service Type *</label>
-                        <select id="carServiceType" required>
-                            <option value="shared">Shared Ride</option>
-                            <option value="private">Private Charter</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Available Seats *</label>
-                        <input type="number" id="carSeats" required min="1" placeholder="e.g., 4">
+                        <input type="number" id="carSeats" required min="1">
                     </div>
 
                     <div class="form-group">
                         <label>Price per Person (MMK) *</label>
-                        <input type="number" id="carPrice" required placeholder="e.g., 25000">
-                        <div class="helper-text">Enter price in Myanmar Kyat per seat</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pick-up Location *</label>
-                        <input type="text" id="carPickup" required placeholder="e.g., Downtown Bus Station">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Drop-off Location *</label>
-                        <input type="text" id="carDropoff" required placeholder="e.g., City Center">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Additional Details</label>
-                        <textarea id="carDetails" placeholder="AC/Non-AC, luggage space, stops along the way, etc..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Driver/Company Name *</label>
-                        <input type="text" id="carDriverName" required placeholder="Your name or company name">
+                        <input type="number" id="carPrice" required>
                     </div>
 
                     <div class="form-group">
                         <label>Contact Phone *</label>
-                        <input type="tel" id="carDriverPhone" required placeholder="e.g., 09-123-456-789">
+                        <input type="tel" id="carPhone" required>
                     </div>
 
-                    <div class="form-group">
-                        <label>Contact Email (Optional)</label>
-                        <input type="email" id="carDriverEmail" placeholder="your.email@example.com">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">🚗 Post Car Ticket</button>
+                    <button type="submit" class="btn-primary">🚗 Post Car Ticket</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Property Detail Modal -->
-    <div id="propertyDetailModal" class="modal property-detail-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="detailTitle"></h2>
-                <button class="close-btn" onclick="closePropertyDetailModal()">×</button>
-            </div>
-            <div id="detailImages" class="image-gallery"></div>
-            <div class="modal-body">
-                <div class="price-section">
-                    <div>
-                        <div id="detailPrice" class="price"></div>
-                        <div id="detailAddress" class="address">
-                            <span>📍</span>
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="features">
-                    <div class="feature-item">
-                        <span>🛏️</span>
-                        <div>
-                            <div class="feature-label">Bedrooms</div>
-                            <div id="detailBeds" class="feature-value"></div>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span>🚿</span>
-                        <div>
-                            <div class="feature-label">Bathrooms</div>
-                            <div id="detailBaths" class="feature-value"></div>
-                        </div>
-                    </div>
-                    <div class="feature-item">
-                        <span>📏</span>
-                        <div>
-                            <div class="feature-label">Square Feet</div>
-                            <div id="detailSqft" class="feature-value"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-info">
-                    <h3>Contact Information</h3>
-                    <div id="detailContact"></div>
-                </div>
-                <div class="description-section">
-                    <h3>Description</h3>
-                    <p id="detailDescription"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Ticket Detail Modal -->
-    <div id="ticketDetailModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="ticketDetailRoute"></h2>
-                <button class="close-btn" onclick="closeTicketDetailModal()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="price-section">
-                    <div id="ticketDetailPrice" class="price"></div>
-                </div>
-                <div id="ticketDetailInfo"></div>
-                <div class="contact-info">
-                    <h3>Seller Information</h3>
-                    <div id="ticketDetailContact"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://zrhslpbtzddtgdifzdhj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyaHNscGJ0emRkdGdkaWZ6ZGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExNjgwMzMsImV4cCI6MjA3Njc0NDAzM30.r7ylCuNq23tpCctb1MibwHAxU-P549lvDKkqxhalq9s';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================
+        // GLOBAL VARIABLES
+        // ============================================
         let map;
         let geocoder;
         let infoWindow;
-        let properties = [];
-        let tickets = [];
-        let cars = [];
         let markers = [];
-        let autocomplete;
         let currentCategory = 'properties';
-        let currentView = 'map';
         let currentUser = null;
-        let verificationTimer = null;
-        let timeLeft = 60;
-        let generatedCode = null;
-        let phoneNumberForVerification = null;
 
-        // Check if user is logged in on page load
-        window.addEventListener('load', function() {
-            const savedUser = localStorage.getItem('daweiUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        async function initApp() {
+            // Check if Supabase is configured
+            if (SUPABASE_URL === 'https://zrhslpbtzddtgdifzdhj.supabase.co') {
+                console.warn('⚠️ Supabase not configured');
+                document.getElementById('setupNotice').classList.add('active');
+                return;
+            }
+
+            // Initialize map
+            initMap();
+
+            // Check for existing session
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                currentUser = session.user;
                 showUserProfile();
             }
-            // Note: App loads normally without login - users can browse freely
-        });
 
-        // Google Sign-In
-        function promptGoogleSignIn() {
-            // Simplified login for demo - in production, use real Google OAuth
-            const mockUser = {
-                name: prompt('Enter your name:'),
-                email: prompt('Enter your email:'),
-                picture: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(prompt('Enter your name:') || 'User') + '&background=3B82F6&color=fff'
-            };
-            
-            if (mockUser.name && mockUser.email) {
-                handleCredentialResponse(mockUser);
-            }
-        }
-
-        function handleCredentialResponse(response) {
-            // In production, decode JWT token from Google
-            // For demo, we'll use the mock user data
-            currentUser = {
-                name: response.name,
-                email: response.email,
-                picture: response.picture,
-                id: Date.now()
-            };
-            
-            localStorage.setItem('daweiUser', JSON.stringify(currentUser));
-            showUserProfile();
-        }
-
-        function showUserProfile() {
-            document.getElementById('loginOverlay').classList.remove('active');
-            document.getElementById('userProfile').classList.add('active');
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userAvatar').src = currentUser.picture;
-        }
-
-        function closeLoginOverlay() {
-            document.getElementById('loginOverlay').classList.remove('active');
-            // Reset phone login
-            document.getElementById('phoneNumberStep').style.display = 'block';
-            document.getElementById('verificationStep').style.display = 'none';
-            document.getElementById('phoneNumber').value = '';
-            document.getElementById('verificationCode').value = '';
-            if (verificationTimer) {
-                clearInterval(verificationTimer);
-            }
-        }
-
-        // Login method switching
-        function switchLoginMethod(method) {
-            document.querySelectorAll('.login-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.login-method').forEach(m => m.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            
-            if (method === 'google') {
-                document.getElementById('googleLogin').classList.add('active');
-            } else {
-                document.getElementById('phoneLogin').classList.add('active');
-            }
-        }
-
-        // Phone Authentication
-        function sendVerificationCode() {
-            const countryCode = document.getElementById('countryCode').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            
-            if (!phoneNumber || phoneNumber.length < 7) {
-                alert('Please enter a valid phone number');
-                return;
-            }
-            
-            phoneNumberForVerification = countryCode + phoneNumber;
-            
-            // Generate 6-digit code
-            generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // In production, this would call your SMS API
-            // For demo, we'll show the code in console and alert
-            console.log('Verification code:', generatedCode);
-            alert(`Demo Mode: Your verification code is: ${generatedCode}\n\n(In production, this would be sent via SMS)`);
-            
-            // Show verification step
-            document.getElementById('phoneNumberStep').style.display = 'none';
-            document.getElementById('verificationStep').style.display = 'block';
-            document.getElementById('sentToNumber').textContent = phoneNumberForVerification;
-            
-            // Start timer
-            startVerificationTimer();
-        }
-
-        function startVerificationTimer() {
-            timeLeft = 60;
-            document.getElementById('resendLink').classList.add('disabled');
-            
-            verificationTimer = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').textContent = timeLeft;
-                
-                if (timeLeft <= 0) {
-                    clearInterval(verificationTimer);
-                    document.getElementById('timerText').textContent = 'Code expired. ';
-                    document.getElementById('resendLink').classList.remove('disabled');
+            // Listen for auth changes
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN') {
+                    currentUser = session.user;
+                    showUserProfile();
+                } else if (event === 'SIGNED_OUT') {
+                    currentUser = null;
+                    hideUserProfile();
                 }
-            }, 1000);
-        }
+            });
 
-        function resendCode() {
-            if (document.getElementById('resendLink').classList.contains('disabled')) {
-                return;
-            }
-            sendVerificationCode();
-        }
-
-        function verifyCode() {
-            const enteredCode = document.getElementById('verificationCode').value;
-            
-            if (enteredCode.length !== 6) {
-                alert('Please enter a 6-digit code');
-                return;
-            }
-            
-            if (enteredCode === generatedCode) {
-                // Code is correct - create user
-                const userName = prompt('Please enter your name:');
-                if (!userName) {
-                    alert('Name is required to complete sign up');
-                    return;
-                }
-                
-                currentUser = {
-                    name: userName,
-                    phone: phoneNumberForVerification,
-                    email: phoneNumberForVerification + '@phone.user', // Fake email for phone users
-                    picture: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userName) + '&background=3B82F6&color=fff',
-                    id: Date.now(),
-                    loginMethod: 'phone'
-                };
-                
-                localStorage.setItem('daweiUser', JSON.stringify(currentUser));
-                showUserProfile();
-                
-                // Clear verification
-                clearInterval(verificationTimer);
-                document.getElementById('phoneNumberStep').style.display = 'block';
-                document.getElementById('verificationStep').style.display = 'none';
-                document.getElementById('phoneNumber').value = '';
-                document.getElementById('verificationCode').value = '';
-                
-                alert('Phone verified successfully! You can now post listings. ✅');
-            } else {
-                alert('Invalid verification code. Please try again.');
-                document.getElementById('verificationCode').value = '';
-            }
-        }
-
-        function backToPhoneNumber() {
-            clearInterval(verificationTimer);
-            document.getElementById('phoneNumberStep').style.display = 'block';
-            document.getElementById('verificationStep').style.display = 'none';
-            document.getElementById('verificationCode').value = '';
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                currentUser = null;
-                localStorage.removeItem('daweiUser');
-                document.getElementById('userProfile').classList.remove('active');
-                document.getElementById('loginOverlay').classList.add('active');
-            }
-        }
-
-        function checkLogin() {
-            if (!currentUser) {
-                // Show login modal for sellers who want to post
-                document.getElementById('loginOverlay').classList.add('active');
-                return false;
-            }
-            return true;
+            // Load initial data
+            loadProperties();
         }
 
         function initMap() {
@@ -1680,258 +647,97 @@
                 center: { lat: 14.0825, lng: 98.1892 },
                 zoom: 14,
                 mapTypeControl: true,
-                mapTypeControlOptions: {
-                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                    position: google.maps.ControlPosition.TOP_RIGHT,
-                },
                 streetViewControl: true,
                 fullscreenControl: true,
             });
 
             geocoder = new google.maps.Geocoder();
             infoWindow = new google.maps.InfoWindow();
+        }
 
-            // Initialize autocomplete for address input
-            const addressInput = document.getElementById('fullAddress');
-            autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                componentRestrictions: { country: 'mm' },
-                fields: ['formatted_address', 'geometry', 'name'],
-                types: ['geocode', 'establishment']
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+        async function signUpWithEmail() {
+            const email = prompt('Enter your email:');
+            const password = prompt('Create a password (min 6 characters):');
+            
+            if (!email || !password) return;
+
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
             });
 
-            // Set bias to Dawei region
-            const daweiCircle = new google.maps.Circle({
-                center: { lat: 14.0825, lng: 98.1892 },
-                radius: 50000
+            if (error) {
+                alert('Sign up error: ' + error.message);
+            } else {
+                alert('✅ Check your email to confirm your account!');
+            }
+        }
+
+        async function signInWithEmail() {
+            const email = prompt('Enter your email:');
+            const password = prompt('Enter your password:');
+            
+            if (!email || !password) return;
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
             });
-            autocomplete.setBounds(daweiCircle.getBounds());
 
-            // When user selects a place from autocomplete
-            autocomplete.addListener('place_changed', function() {
-                const place = autocomplete.getPlace();
-                if (place.geometry) {
-                    document.getElementById('address').value = place.name || place.formatted_address;
-                }
-            });
-
-            loadData();
-            updateCount();
-        }
-
-        window.initMap = initMap;
-
-        function loadData() {
-            const storedProperties = localStorage.getItem('daweiProperties');
-            const storedTickets = localStorage.getItem('daweiTickets');
-            const storedCars = localStorage.getItem('daweiCars');
-            
-            if (storedProperties) {
-                properties = JSON.parse(storedProperties);
-                properties.forEach(property => addMarkerToMap(property));
-            }
-            
-            if (storedTickets) {
-                tickets = JSON.parse(storedTickets);
-                displayTickets();
-            }
-
-            if (storedCars) {
-                cars = JSON.parse(storedCars);
-                displayCars();
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem('daweiProperties', JSON.stringify(properties));
-            localStorage.setItem('daweiTickets', JSON.stringify(tickets));
-            localStorage.setItem('daweiCars', JSON.stringify(cars));
-            updateCount();
-        }
-
-        function updateCount() {
-            let count, label, icon;
-            
-            if (currentCategory === 'properties') {
-                count = properties.length;
-                label = 'အိမ်ခြံမြေ';
-                icon = '📍';
-            } else if (currentCategory === 'tickets') {
-                count = tickets.length;
-                label = 'လေယာဉ်လက်မှတ်';
-                icon = '✈️';
+            if (error) {
+                alert('Sign in error: ' + error.message);
             } else {
-                count = cars.length;
-                label = 'ကားလက်မှတ်';
-                icon = '🚗';
-            }
-            
-            document.getElementById('itemCount').innerHTML = `<span>${icon}</span><span>${count} ${label} ရရှိနိုင်သည်</span>`;
-        }
-
-        function switchCategory(category) {
-            currentCategory = category;
-            
-            // Update tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            // Hide all panels
-            document.getElementById('ticketsPanel').classList.remove('active');
-            document.getElementById('carsPanel').classList.remove('active');
-            document.getElementById('propertiesListPanel').classList.remove('active');
-            
-            // Hide all buttons
-            document.getElementById('addPropertyBtn').style.display = 'none';
-            document.getElementById('addTicketBtn').style.display = 'none';
-            document.getElementById('addCarBtn').style.display = 'none';
-            
-            if (category === 'properties') {
-                document.getElementById('addPropertyBtn').style.display = 'block';
-                document.getElementById('propertyLegend').style.display = 'block';
-                document.getElementById('viewToggle').style.display = 'flex';
-                
-                if (currentView === 'map') {
-                    markers.forEach(m => m.setMap(map));
-                } else {
-                    markers.forEach(m => m.setMap(null));
-                    displayPropertiesList();
-                }
-            } else if (category === 'tickets') {
-                document.getElementById('addTicketBtn').style.display = 'block';
-                document.getElementById('ticketsPanel').classList.add('active');
-                document.getElementById('propertyLegend').style.display = 'none';
-                document.getElementById('viewToggle').style.display = 'none';
-                markers.forEach(m => m.setMap(null));
-                displayTickets();
-            } else {
-                document.getElementById('addCarBtn').style.display = 'block';
-                document.getElementById('carsPanel').classList.add('active');
-                document.getElementById('propertyLegend').style.display = 'none';
-                document.getElementById('viewToggle').style.display = 'none';
-                markers.forEach(m => m.setMap(null));
-                displayCars();
-            }
-            
-            updateCount();
-        }
-
-        function switchView(view) {
-            currentView = view;
-            
-            // Update view buttons
-            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            
-            if (view === 'map') {
-                document.getElementById('propertiesListPanel').classList.remove('active');
-                document.getElementById('propertyLegend').style.display = 'block';
-                markers.forEach(m => m.setMap(map));
-            } else {
-                document.getElementById('propertiesListPanel').classList.add('active');
-                document.getElementById('propertyLegend').style.display = 'none';
-                markers.forEach(m => m.setMap(null));
-                displayPropertiesList();
+                alert('✅ Signed in successfully!');
             }
         }
 
-        function displayPropertiesList() {
-            const container = document.getElementById('propertiesList');
-            
-            if (properties.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center;">အိမ်ခြံမြေမရှိသေးပါ။ ပထမဆုံးတင်သူဖြစ်ပါ!</p>';
+        async function signOut() {
+            const { error } = await supabase.auth.signOut();
+            if (!error) {
+                alert('Signed out successfully');
+            }
+        }
+
+        function showUserProfile() {
+            document.getElementById('userProfile').classList.add('active');
+            document.getElementById('userName').textContent = currentUser.email.split('@')[0];
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('loginBtn').style.display = 'none';
+            document.getElementById('signupBtn').style.display = 'none';
+        }
+
+        function hideUserProfile() {
+            document.getElementById('userProfile').classList.remove('active');
+            document.getElementById('loginBtn').style.display = 'block';
+            document.getElementById('signupBtn').style.display = 'block';
+        }
+
+        // ============================================
+        // PROPERTIES
+        // ============================================
+        async function loadProperties() {
+            const { data, error } = await supabase
+                .from('properties')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading properties:', error);
+                document.getElementById('itemCount').textContent = 'Error loading properties';
                 return;
             }
 
-            container.innerHTML = properties.map(property => `
-                <div class="property-list-card" onclick="openPropertyDetailModal(${properties.indexOf(property)})">
-                    <img src="${property.image}" alt="${property.title}" class="property-list-image" />
-                    <div class="property-list-content">
-                        <div class="property-list-title">${property.title}</div>
-                        <div class="property-list-price">${property.priceFormatted}</div>
-                        <div class="property-list-address">
-                            <span>📍</span>
-                            <span>${property.address}</span>
-                        </div>
-                        <div class="property-list-features">
-                            <span>🛏️ ${property.beds} beds</span>
-                            <span>🚿 ${property.baths} baths</span>
-                            <span>📏 ${property.sqft} sqft</span>
-                        </div>
-                        ${property.postedBy ? `<div class="posted-by" style="margin-top: 8px;">
-                            <img src="${property.postedBy.picture}" />
-                            တင်သူ ${property.postedBy.name}
-                        </div>` : ''}
-                    </div>
-                </div>
-            `).join('');
-        }
+            // Clear existing markers
+            markers.forEach(m => m.setMap(null));
+            markers = [];
 
-        // Property Functions
-        function openAddPropertyModal() {
-            if (!checkLogin()) return;
-            document.getElementById('addPropertyModal').classList.add('active');
-        }
+            // Add markers
+            data.forEach(property => addMarkerToMap(property));
 
-        function closeAddPropertyModal() {
-            document.getElementById('addPropertyModal').classList.remove('active');
-            document.getElementById('propertyForm').reset();
-            document.getElementById('imagePreview').innerHTML = 'Image preview will appear here';
-        }
-
-        function previewImage() {
-            const url = document.getElementById('imageUrl').value;
-            const preview = document.getElementById('imagePreview');
-            if (url) {
-                preview.innerHTML = `<img src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='Invalid image URL'">`;
-            }
-        }
-
-        function submitProperty(event) {
-            event.preventDefault();
-
-            const property = {
-                id: Date.now(),
-                title: document.getElementById('title').value,
-                price: document.getElementById('price').value,
-                priceFormatted: formatPrice(document.getElementById('price').value),
-                address: document.getElementById('address').value || document.getElementById('fullAddress').value,
-                fullAddress: document.getElementById('fullAddress').value,
-                beds: document.getElementById('beds').value,
-                baths: document.getElementById('baths').value,
-                sqft: document.getElementById('sqft').value || 'N/A',
-                description: document.getElementById('description').value,
-                contactName: document.getElementById('contactName').value,
-                contactPhone: document.getElementById('contactPhone').value,
-                contactEmail: document.getElementById('contactEmail').value,
-                image: document.getElementById('imageUrl').value,
-                postedBy: {
-                    name: currentUser.name,
-                    email: currentUser.email,
-                    picture: currentUser.picture
-                },
-                postedDate: new Date().toISOString()
-            };
-
-            geocoder.geocode({ address: property.fullAddress }, (results, status) => {
-                if (status === 'OK') {
-                    property.lat = results[0].geometry.location.lat();
-                    property.lng = results[0].geometry.location.lng();
-                } else {
-                    property.lat = 14.0825 + (Math.random() - 0.5) * 0.02;
-                    property.lng = 98.1892 + (Math.random() - 0.5) * 0.02;
-                    alert('Could not find exact location. Property placed near Dawei center.');
-                }
-
-                properties.push(property);
-                saveData();
-                addMarkerToMap(property);
-                closeAddPropertyModal();
-                alert('Property posted successfully! 🎉');
-            });
-        }
-
-        function formatPrice(price) {
-            return new Intl.NumberFormat().format(price) + ' သိန်း';
+            document.getElementById('itemCount').textContent = `📍 ${data.length} properties`;
         }
 
         function addMarkerToMap(property) {
@@ -1940,7 +746,7 @@
                 map: map,
                 title: property.title,
                 label: {
-                    text: property.price,
+                    text: property.price.toString(),
                     color: 'white',
                     fontSize: '12px',
                     fontWeight: 'bold'
@@ -1955,102 +761,271 @@
                 }
             });
 
-            marker.addListener('mouseover', () => {
-                showInfoWindow(marker, property);
-            });
-
-            marker.addListener('mouseout', () => {
-                infoWindow.close();
-            });
-
             marker.addListener('click', () => {
-                const propertyIndex = properties.findIndex(p => p.id === property.id);
-                openPropertyDetailModal(propertyIndex);
+                showPropertyInfo(marker, property);
             });
 
             markers.push(marker);
         }
 
-        function showInfoWindow(marker, property) {
+        function showPropertyInfo(marker, property) {
             const content = `
                 <div style="padding: 10px; max-width: 250px;">
-                    <img src="${property.image}" alt="${property.title}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />
-                    <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #1f2937;">${property.title}</h3>
-                    <p style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; color: #3B82F6;">${property.priceFormatted}</p>
+                    <img src="${property.image_url}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />
+                    <h3 style="margin: 0 0 8px 0; font-size: 16px;">${property.title}</h3>
+                    <p style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; color: #3B82F6;">${property.price} lakh</p>
                     <p style="margin: 0 0 4px 0; font-size: 14px; color: #6b7280;">${property.address}</p>
                     <div style="display: flex; gap: 12px; font-size: 14px; color: #6b7280;">
                         <span>🛏️ ${property.beds}</span>
                         <span>🚿 ${property.baths}</span>
-                        <span>📏 ${property.sqft} sqft</span>
+                        <span>📏 ${property.sqft || 'N/A'} sqft</span>
                     </div>
-                    ${property.postedBy ? `<div style="margin-top: 8px; font-size: 11px; color: #9ca3af; display: flex; align-items: center; gap: 4px;">
-                        <img src="${property.postedBy.picture}" style="width: 16px; height: 16px; border-radius: 50%;" />
-                        Posted by ${property.postedBy.name}
-                    </div>` : ''}
-                    <p style="margin-top: 8px; font-size: 12px; color: #3B82F6; font-weight: 500;">Click for details →</p>
+                    <p style="margin-top: 8px; font-size: 13px;">${property.description.substring(0, 100)}...</p>
+                    <p style="margin-top: 8px; font-size: 14px; font-weight: 600;">📞 ${property.contact_phone}</p>
                 </div>
             `;
             infoWindow.setContent(content);
             infoWindow.open(map, marker);
         }
 
-        function openPropertyDetailModal(propertyIndex) {
-            const property = properties[propertyIndex];
-            if (!property) return;
-            
-            document.getElementById('detailTitle').textContent = property.title;
-            document.getElementById('detailPrice').textContent = property.priceFormatted;
-            document.getElementById('detailAddress').querySelector('span:last-child').textContent = property.address;
-            document.getElementById('detailBeds').textContent = property.beds;
-            document.getElementById('detailBaths').textContent = property.baths;
-            document.getElementById('detailSqft').textContent = property.sqft;
-            document.getElementById('detailDescription').textContent = property.description;
+        async function submitProperty(event) {
+            event.preventDefault();
 
-            document.getElementById('detailImages').innerHTML = `<img src="${property.image}" alt="${property.title}" style="grid-column: span 2; height: 400px;">`;
+            if (!currentUser) {
+                alert('Please sign in to post properties');
+                return;
+            }
 
-            let contactHTML = `
-                <div class="contact-item">
-                    <span>👤</span>
-                    <span><strong>Name:</strong> ${property.contactName}</span>
-                </div>
-                <div class="contact-item">
-                    <span>📞</span>
-                    <span><strong>Phone:</strong> <a href="tel:${property.contactPhone}">${property.contactPhone}</a></span>
-                </div>
-            `;
-            
-            if (property.contactEmail) {
-                contactHTML += `
-                <div class="contact-item">
-                    <span>✉️</span>
-                    <span><strong>Email:</strong> <a href="mailto:${property.contactEmail}">${property.contactEmail}</a></span>
-                </div>
-                `;
-            }
-            
-            document.getElementById('detailContact').innerHTML = contactHTML;
-            
-            // Add posted by info
-            if (property.postedBy) {
-                contactHTML += `
-                <div class="posted-by" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-                    <img src="${property.postedBy.picture}" />
-                    <span>Posted by <strong>${property.postedBy.name}</strong> on ${new Date(property.postedDate).toLocaleDateString()}</span>
-                </div>
-                `;
-                document.getElementById('detailContact').innerHTML = contactHTML;
-            }
-            
-            document.getElementById('propertyDetailModal').classList.add('active');
+            const address = document.getElementById('fullAddress').value;
+
+            // Geocode address
+            geocoder.geocode({ address: address }, async (results, status) => {
+                if (status === 'OK') {
+                    const location = results[0].geometry.location;
+
+                    const { data, error } = await supabase
+                        .from('properties')
+                        .insert([
+                            {
+                                title: document.getElementById('title').value,
+                                price: document.getElementById('price').value,
+                                address: address,
+                                beds: document.getElementById('beds').value,
+                                baths: document.getElementById('baths').value,
+                                sqft: document.getElementById('sqft').value,
+                                description: document.getElementById('description').value,
+                                contact_phone: document.getElementById('contactPhone').value,
+                                image_url: document.getElementById('imageUrl').value,
+                                lat: location.lat(),
+                                lng: location.lng(),
+                                user_id: currentUser.id
+                            }
+                        ]);
+
+                    if (error) {
+                        alert('Error posting property: ' + error.message);
+                    } else {
+                        alert('✅ Property posted successfully!');
+                        closeAddPropertyModal();
+                        loadProperties();
+                    }
+                } else {
+                    alert('Could not geocode address. Please try a different address.');
+                }
+            });
         }
 
-        function closePropertyDetailModal() {
-            document.getElementById('propertyDetailModal').classList.remove('active');
+        // ============================================
+        // AIR TICKETS
+        // ============================================
+        async function loadTickets() {
+            const { data, error } = await supabase
+                .from('air_tickets')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading tickets:', error);
+                document.getElementById('ticketsList').innerHTML = '<div class="loading">Error loading tickets</div>';
+                return;
+            }
+
+            const container = document.getElementById('ticketsList');
+            if (data.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center;">No air tickets yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.map(ticket => `
+                <div class="ticket-card">
+                    <div class="ticket-route">${ticket.from_city} → ${ticket.to_city}</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">📅 ${new Date(ticket.depart_date).toLocaleDateString()}</div>
+                    <div class="ticket-price">${ticket.price.toLocaleString()} MMK</div>
+                    ${ticket.airline ? `<div style="font-size: 13px; color: #6b7280;">✈️ ${ticket.airline}</div>` : ''}
+                    <div style="font-size: 14px; margin-top: 8px; font-weight: 600;">📞 ${ticket.contact_phone}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('itemCount').textContent = `✈️ ${data.length} air tickets`;
         }
 
-        // Ticket Functions
+        async function submitTicket(event) {
+            event.preventDefault();
+
+            if (!currentUser) {
+                alert('Please sign in to post tickets');
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('air_tickets')
+                .insert([
+                    {
+                        from_city: document.getElementById('ticketFrom').value,
+                        to_city: document.getElementById('ticketTo').value,
+                        depart_date: document.getElementById('ticketDepartDate').value,
+                        return_date: document.getElementById('ticketReturnDate').value || null,
+                        airline: document.getElementById('ticketAirline').value,
+                        price: document.getElementById('ticketPrice').value,
+                        contact_phone: document.getElementById('ticketPhone').value,
+                        user_id: currentUser.id
+                    }
+                ]);
+
+            if (error) {
+                alert('Error posting ticket: ' + error.message);
+            } else {
+                alert('✅ Air ticket posted successfully!');
+                closeAddTicketModal();
+                loadTickets();
+            }
+        }
+
+        // ============================================
+        // CAR TICKETS
+        // ============================================
+        async function loadCars() {
+            const { data, error } = await supabase
+                .from('car_tickets')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading cars:', error);
+                document.getElementById('carsList').innerHTML = '<div class="loading">Error loading car tickets</div>';
+                return;
+            }
+
+            const container = document.getElementById('carsList');
+            if (data.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center;">No car tickets yet</p>';
+                return;
+            }
+
+            container.innerHTML = data.map(car => `
+                <div class="ticket-card">
+                    <div class="ticket-route">${car.from_city} → ${car.to_city}</div>
+                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">📅 ${new Date(car.depart_date).toLocaleDateString()} at ${car.depart_time}</div>
+                    <div class="ticket-price">${car.price.toLocaleString()} MMK/person</div>
+                    <div style="font-size: 13px; color: #6b7280;">🚗 ${car.car_type.charAt(0).toUpperCase() + car.car_type.slice(1)}</div>
+                    <div style="font-size: 13px; color: #6b7280;">💺 ${car.seats} seats available</div>
+                    <div style="font-size: 14px; margin-top: 8px; font-weight: 600;">📞 ${car.contact_phone}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('itemCount').textContent = `🚗 ${data.length} car tickets`;
+        }
+
+        async function submitCar(event) {
+            event.preventDefault();
+
+            if (!currentUser) {
+                alert('Please sign in to post car tickets');
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('car_tickets')
+                .insert([
+                    {
+                        from_city: document.getElementById('carFrom').value,
+                        to_city: document.getElementById('carTo').value,
+                        depart_date: document.getElementById('carDepartDate').value,
+                        depart_time: document.getElementById('carDepartTime').value,
+                        car_type: document.getElementById('carType').value,
+                        seats: document.getElementById('carSeats').value,
+                        price: document.getElementById('carPrice').value,
+                        contact_phone: document.getElementById('carPhone').value,
+                        user_id: currentUser.id
+                    }
+                ]);
+
+            if (error) {
+                alert('Error posting car ticket: ' + error.message);
+            } else {
+                alert('✅ Car ticket posted successfully!');
+                closeAddCarModal();
+                loadCars();
+            }
+        }
+
+        // ============================================
+        // CATEGORY SWITCHING
+        // ============================================
+        function switchCategory(category) {
+            currentCategory = category;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all panels
+            document.getElementById('ticketsPanel').classList.remove('active');
+            document.getElementById('carsPanel').classList.remove('active');
+            
+            // Hide all buttons
+            document.getElementById('addPropertyBtn').style.display = 'none';
+            document.getElementById('addTicketBtn').style.display = 'none';
+            document.getElementById('addCarBtn').style.display = 'none';
+            
+            if (category === 'properties') {
+                document.getElementById('addPropertyBtn').style.display = 'block';
+                markers.forEach(m => m.setMap(map));
+                loadProperties();
+            } else if (category === 'tickets') {
+                document.getElementById('addTicketBtn').style.display = 'block';
+                document.getElementById('ticketsPanel').classList.add('active');
+                markers.forEach(m => m.setMap(null));
+                loadTickets();
+            } else {
+                document.getElementById('addCarBtn').style.display = 'block';
+                document.getElementById('carsPanel').classList.add('active');
+                markers.forEach(m => m.setMap(null));
+                loadCars();
+            }
+        }
+
+        // ============================================
+        // MODAL CONTROLS
+        // ============================================
+        function openAddPropertyModal() {
+            if (!currentUser) {
+                alert('Please sign in to post properties');
+                return;
+            }
+            document.getElementById('addPropertyModal').classList.add('active');
+        }
+
+        function closeAddPropertyModal() {
+            document.getElementById('addPropertyModal').classList.remove('active');
+            document.getElementById('propertyForm').reset();
+        }
+
         function openAddTicketModal() {
-            if (!checkLogin()) return;
+            if (!currentUser) {
+                alert('Please sign in to post tickets');
+                return;
+            }
             document.getElementById('addTicketModal').classList.add('active');
         }
 
@@ -2059,144 +1034,11 @@
             document.getElementById('ticketForm').reset();
         }
 
-        function submitTicket(event) {
-            event.preventDefault();
-
-            const ticket = {
-                id: Date.now(),
-                from: document.getElementById('ticketFrom').value,
-                to: document.getElementById('ticketTo').value,
-                departDate: document.getElementById('ticketDepartDate').value,
-                returnDate: document.getElementById('ticketReturnDate').value,
-                airline: document.getElementById('ticketAirline').value,
-                type: document.getElementById('ticketType').value,
-                class: document.getElementById('ticketClass').value,
-                price: document.getElementById('ticketPrice').value,
-                priceFormatted: new Intl.NumberFormat().format(document.getElementById('ticketPrice').value) + ' MMK',
-                quantity: document.getElementById('ticketQuantity').value,
-                details: document.getElementById('ticketDetails').value,
-                sellerName: document.getElementById('ticketSellerName').value,
-                sellerPhone: document.getElementById('ticketSellerPhone').value,
-                sellerEmail: document.getElementById('ticketSellerEmail').value,
-                postedBy: {
-                    name: currentUser.name,
-                    email: currentUser.email,
-                    picture: currentUser.picture
-                },
-                postedDate: new Date().toISOString()
-            };
-
-            tickets.push(ticket);
-            saveData();
-            displayTickets();
-            closeAddTicketModal();
-            alert('Air ticket posted successfully! ✈️');
-        }
-
-        function displayTickets() {
-            const container = document.getElementById('ticketsList');
-            
-            if (tickets.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center;">လေယာဉ်လက်မှတ်မရှိသေးပါ။ ပထမဆုံးတင်သူဖြစ်ပါ!</p>';
+        function openAddCarModal() {
+            if (!currentUser) {
+                alert('Please sign in to post car tickets');
                 return;
             }
-
-            container.innerHTML = tickets.map(ticket => `
-                <div class="ticket-card" onclick="openTicketDetailModal(${ticket.id})">
-                    <div class="ticket-route">${ticket.from} → ${ticket.to}</div>
-                    <div class="ticket-date">📅 ${formatDate(ticket.departDate)}${ticket.returnDate ? ' - ' + formatDate(ticket.returnDate) : ''}</div>
-                    <div class="ticket-price">${ticket.priceFormatted}</div>
-                    <div class="ticket-seller">👤 ${ticket.sellerName}</div>
-                    ${ticket.airline ? `<div class="ticket-seller">✈️ ${ticket.airline}</div>` : ''}
-                    ${ticket.postedBy ? `<div class="posted-by">
-                        <img src="${ticket.postedBy.picture}" />
-                        တင်သူ ${ticket.postedBy.name}
-                    </div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        }
-
-        function openTicketDetailModal(ticketId) {
-            const ticket = tickets.find(t => t.id === ticketId);
-            if (!ticket) return;
-
-            document.getElementById('ticketDetailRoute').textContent = `${ticket.from} → ${ticket.to}`;
-            document.getElementById('ticketDetailPrice').textContent = ticket.priceFormatted;
-
-            const infoHTML = `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Departure Date</span>
-                    <span class="ticket-detail-value">${formatDate(ticket.departDate)}</span>
-                </div>
-                ${ticket.returnDate ? `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Return Date</span>
-                    <span class="ticket-detail-value">${formatDate(ticket.returnDate)}</span>
-                </div>
-                ` : ''}
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Flight Type</span>
-                    <span class="ticket-detail-value">${ticket.type === 'one-way' ? 'One Way' : 'Round Trip'}</span>
-                </div>
-                ${ticket.airline ? `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Airline</span>
-                    <span class="ticket-detail-value">${ticket.airline}</span>
-                </div>
-                ` : ''}
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Class</span>
-                    <span class="ticket-detail-value">${ticket.class.charAt(0).toUpperCase() + ticket.class.slice(1)}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Available Tickets</span>
-                    <span class="ticket-detail-value">${ticket.quantity}</span>
-                </div>
-                ${ticket.details ? `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Additional Details</span>
-                    <span class="ticket-detail-value">${ticket.details}</span>
-                </div>
-                ` : ''}
-            `;
-            document.getElementById('ticketDetailInfo').innerHTML = infoHTML;
-
-            let contactHTML = `
-                <div class="contact-item">
-                    <span>👤</span>
-                    <span><strong>Seller:</strong> ${ticket.sellerName}</span>
-                </div>
-                <div class="contact-item">
-                    <span>📞</span>
-                    <span><strong>Phone:</strong> <a href="tel:${ticket.sellerPhone}">${ticket.sellerPhone}</a></span>
-                </div>
-            `;
-            
-            if (ticket.sellerEmail) {
-                contactHTML += `
-                <div class="contact-item">
-                    <span>✉️</span>
-                    <span><strong>Email:</strong> <a href="mailto:${ticket.sellerEmail}">${ticket.sellerEmail}</a></span>
-                </div>
-                `;
-            }
-            
-            document.getElementById('ticketDetailContact').innerHTML = contactHTML;
-            document.getElementById('ticketDetailModal').classList.add('active');
-        }
-
-        function closeTicketDetailModal() {
-            document.getElementById('ticketDetailModal').classList.remove('active');
-        }
-
-        // Car Functions
-        function openAddCarModal() {
-            if (!checkLogin()) return;
             document.getElementById('addCarModal').classList.add('active');
         }
 
@@ -2205,140 +1047,24 @@
             document.getElementById('carForm').reset();
         }
 
-        function submitCar(event) {
-            event.preventDefault();
-
-            const car = {
-                id: Date.now(),
-                from: document.getElementById('carFrom').value,
-                to: document.getElementById('carTo').value,
-                departDate: document.getElementById('carDepartDate').value,
-                departTime: document.getElementById('carDepartTime').value,
-                carType: document.getElementById('carType').value,
-                serviceType: document.getElementById('carServiceType').value,
-                seats: document.getElementById('carSeats').value,
-                price: document.getElementById('carPrice').value,
-                priceFormatted: new Intl.NumberFormat().format(document.getElementById('carPrice').value) + ' MMK/person',
-                pickup: document.getElementById('carPickup').value,
-                dropoff: document.getElementById('carDropoff').value,
-                details: document.getElementById('carDetails').value,
-                driverName: document.getElementById('carDriverName').value,
-                driverPhone: document.getElementById('carDriverPhone').value,
-                driverEmail: document.getElementById('carDriverEmail').value,
-                postedBy: {
-                    name: currentUser.name,
-                    email: currentUser.email,
-                    picture: currentUser.picture
-                },
-                postedDate: new Date().toISOString()
-            };
-
-            cars.push(car);
-            saveData();
-            displayCars();
-            closeAddCarModal();
-            alert('Car ticket posted successfully! 🚗');
-        }
-
-        function displayCars() {
-            const container = document.getElementById('carsList');
-            
-            if (cars.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center;">ကားလက်မှတ်မရှိသေးပါ။ ပထမဆုံးတင်သူဖြစ်ပါ!</p>';
-                return;
-            }
-
-            container.innerHTML = cars.map(car => `
-                <div class="ticket-card" onclick="openCarDetailModal(${car.id})">
-                    <div class="ticket-route">${car.from} → ${car.to}</div>
-                    <div class="ticket-date">📅 ${formatDate(car.departDate)} at ${car.departTime}</div>
-                    <div class="ticket-price">${car.priceFormatted}</div>
-                    <div class="ticket-seller">🚗 ${car.carType.charAt(0).toUpperCase() + car.carType.slice(1)} - ${car.serviceType.charAt(0).toUpperCase() + car.serviceType.slice(1)}</div>
-                    <div class="ticket-seller">💺 ${car.seats} seats available</div>
-                    <div class="ticket-seller">👤 ${car.driverName}</div>
-                    ${car.postedBy ? `<div class="posted-by">
-                        <img src="${car.postedBy.picture}" />
-                        တင်သူ ${car.postedBy.name}
-                    </div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function openCarDetailModal(carId) {
-            const car = cars.find(c => c.id === carId);
-            if (!car) return;
-
-            document.getElementById('ticketDetailRoute').textContent = `${car.from} → ${car.to}`;
-            document.getElementById('ticketDetailPrice').textContent = car.priceFormatted;
-
-            const infoHTML = `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Departure Date</span>
-                    <span class="ticket-detail-value">${formatDate(car.departDate)}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Departure Time</span>
-                    <span class="ticket-detail-value">${car.departTime}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Car Type</span>
-                    <span class="ticket-detail-value">${car.carType.charAt(0).toUpperCase() + car.carType.slice(1)}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Service Type</span>
-                    <span class="ticket-detail-value">${car.serviceType.charAt(0).toUpperCase() + car.serviceType.slice(1)}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Available Seats</span>
-                    <span class="ticket-detail-value">${car.seats}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Pick-up Location</span>
-                    <span class="ticket-detail-value">${car.pickup}</span>
-                </div>
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Drop-off Location</span>
-                    <span class="ticket-detail-value">${car.dropoff}</span>
-                </div>
-                ${car.details ? `
-                <div class="ticket-detail-row">
-                    <span class="ticket-detail-label">Additional Details</span>
-                    <span class="ticket-detail-value">${car.details}</span>
-                </div>
-                ` : ''}
-            `;
-            document.getElementById('ticketDetailInfo').innerHTML = infoHTML;
-
-            let contactHTML = `
-                <div class="contact-item">
-                    <span>👤</span>
-                    <span><strong>Driver/Company:</strong> ${car.driverName}</span>
-                </div>
-                <div class="contact-item">
-                    <span>📞</span>
-                    <span><strong>Phone:</strong> <a href="tel:${car.driverPhone}">${car.driverPhone}</a></span>
-                </div>
-            `;
-            
-            if (car.driverEmail) {
-                contactHTML += `
-                <div class="contact-item">
-                    <span>✉️</span>
-                    <span><strong>Email:</strong> <a href="mailto:${car.driverEmail}">${car.driverEmail}</a></span>
-                </div>
-                `;
-            }
-            
-            document.getElementById('ticketDetailContact').innerHTML = contactHTML;
-            document.getElementById('ticketDetailModal').classList.add('active');
-        }
-
-        // Close modals when clicking outside
+        // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('active');
             }
         }
+
+        // ============================================
+        // START THE APP
+        // ============================================
+        window.addEventListener('load', () => {
+            // Wait for Google Maps to load
+            if (typeof google !== 'undefined') {
+                initApp();
+            } else {
+                setTimeout(initApp, 1000);
+            }
+        });
     </script>
 </body>
 </html>
