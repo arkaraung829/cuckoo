@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dawei Marketplace - Properties, Air & Car Tickets</title>
+    <title>Dawei Marketplace - Properties & Tickets</title>
+    
+    <!-- Google Maps API - Load first and wait -->
+    <script>
+        function initGoogleMaps() {
+            console.log('Google Maps API loaded successfully');
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1nQ2lcA2kZpmeG6sTQT4WHyrbwd1LPpI&libraries=places&callback=initGoogleMaps"></script>
     
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1nQ2lcA2kZpmeG6sTQT4WHyrbwd1LPpI&libraries=places" async defer></script>
-    
     <style>
         * {
             margin: 0;
@@ -19,7 +23,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             overflow: hidden;
         }
 
@@ -76,6 +80,19 @@
             background: #3B82F6;
             color: white;
             border-color: #3B82F6;
+        }
+
+        .tab-btn:hover {
+            border-color: #3B82F6;
+        }
+
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 15px;
         }
 
         .add-btn {
@@ -144,11 +161,62 @@
             margin-bottom: 8px;
         }
 
+        .ticket-date {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
         .ticket-price {
             font-size: 20px;
             font-weight: 700;
             color: #3B82F6;
             margin-bottom: 8px;
+        }
+
+        .ticket-seller {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 16px;
+            z-index: 10;
+        }
+
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .legend-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #3B82F6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
         }
 
         .modal {
@@ -177,6 +245,7 @@
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .modal-header {
@@ -191,6 +260,12 @@
             z-index: 10;
         }
 
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
         .close-btn {
             background: transparent;
             border: none;
@@ -200,6 +275,13 @@
             border-radius: 50%;
             width: 40px;
             height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: #f3f4f6;
         }
 
         .modal-body {
@@ -226,6 +308,20 @@
             border: 1px solid #d1d5db;
             border-radius: 8px;
             font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         .form-row {
@@ -234,78 +330,30 @@
             gap: 16px;
         }
 
-        .btn-primary {
-            width: 100%;
-            background: #3B82F6;
-            color: white;
-            border: none;
-            padding: 12px;
+        .btn {
+            padding: 12px 24px;
             border-radius: 8px;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
         }
 
         .helper-text {
             font-size: 12px;
             color: #6b7280;
             margin-top: 4px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #6b7280;
-        }
-
-        .user-profile {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 12px 16px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            z-index: 10;
-        }
-
-        .user-profile.active {
-            display: flex;
-        }
-
-        .logout-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .login-box {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            max-width: 400px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 12px;
-            background: #3B82F6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 10px;
         }
 
         .setup-notice {
@@ -338,15 +386,12 @@
             font-size: 13px;
         }
 
-        .setup-notice ol {
-            text-align: left;
-            margin: 20px 0;
-            padding-left: 20px;
-        }
-
-        .setup-notice li {
-            margin-bottom: 10px;
-            line-height: 1.6;
+        .pac-container {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 4px;
+            z-index: 10001 !important;
         }
     </style>
 </head>
@@ -354,119 +399,130 @@
     <!-- Setup Notice -->
     <div class="setup-notice active" id="setupNotice">
         <h2>⚙️ Supabase Setup Required</h2>
-        <p style="margin-bottom: 20px;">Please configure your Supabase credentials in the code:</p>
-        <ol>
-            <li>Find <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in the script</li>
-            <li>Replace with your actual Supabase project credentials</li>
-            <li>Follow the setup instructions provided separately</li>
+        <p style="margin-bottom: 20px;">Please configure your Supabase credentials:</p>
+        <ol style="text-align: left; margin: 20px 0; padding-left: 20px;">
+            <li style="margin-bottom: 10px;">Find <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in the script below</li>
+            <li style="margin-bottom: 10px;">Replace with your Supabase project URL and anon key</li>
+            <li style="margin-bottom: 10px;">Run the SQL setup script in Supabase SQL Editor</li>
         </ol>
-        <button class="auth-btn" onclick="document.getElementById('setupNotice').style.display='none'">I'll Set This Up</button>
+        <button class="btn btn-primary" onclick="document.getElementById('setupNotice').style.display='none'">Got It!</button>
     </div>
 
     <div id="map"></div>
 
     <div class="header">
         <h1>Dawei Marketplace</h1>
-        <p>Properties, Air & Car Tickets</p>
+        <p>Properties & Tickets</p>
         
         <div class="category-tabs">
-            <button class="tab-btn active" onclick="switchCategory('properties')">🏠 Properties</button>
-            <button class="tab-btn" onclick="switchCategory('tickets')">✈️ Air</button>
-            <button class="tab-btn" onclick="switchCategory('cars')">🚗 Cars</button>
+            <button class="tab-btn active" onclick="switchCategory('properties')">🏠 အိမ်ခြံမြေ</button>
+            <button class="tab-btn" onclick="switchCategory('tickets')">✈️ လေယာဉ်</button>
+            <button class="tab-btn" onclick="switchCategory('cars')">🚗 ကား</button>
         </div>
 
-        <div id="itemCount" style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
-            Loading...
+        <div class="header-info" id="itemCount">
+            <span>📍</span>
+            <span>Loading...</span>
         </div>
-
-        <button class="add-btn" id="addPropertyBtn" onclick="openAddPropertyModal()">➕ Post Property</button>
-        <button class="add-btn" id="addTicketBtn" onclick="openAddTicketModal()" style="display:none;">➕ Post Air Ticket</button>
-        <button class="add-btn" id="addCarBtn" onclick="openAddCarModal()" style="display:none;">➕ Post Car Ticket</button>
         
-        <div style="margin-top: 15px;">
-            <button class="auth-btn" id="loginBtn" onclick="signInWithEmail()">Sign In</button>
-            <button class="auth-btn" id="signupBtn" onclick="signUpWithEmail()" style="background: #10b981;">Sign Up</button>
-        </div>
-    </div>
-
-    <!-- User Profile -->
-    <div class="user-profile" id="userProfile">
-        <div>
-            <div id="userName" style="font-weight: 600; color: #1f2937;"></div>
-            <div id="userEmail" style="font-size: 12px; color: #6b7280;"></div>
-        </div>
-        <button class="logout-btn" onclick="signOut()">Logout</button>
+        <button class="add-btn" id="addPropertyBtn" onclick="openAddPropertyModal()">➕ အိမ်ခြံမြေတင်ရန်</button>
+        <button class="add-btn" id="addTicketBtn" onclick="openAddTicketModal()" style="display:none;">➕ လေယာဉ်လက်မှတ်တင်ရန်</button>
+        <button class="add-btn" id="addCarBtn" onclick="openAddCarModal()" style="display:none;">➕ ကားလက်မှတ်တင်ရန်</button>
     </div>
 
     <!-- Tickets Panel -->
     <div class="tickets-panel" id="ticketsPanel">
-        <h2>✈️ Air Tickets</h2>
-        <div id="ticketsList"><div class="loading">Loading tickets...</div></div>
+        <h2>✈️ လေယာဉ်လက်မှတ်များ</h2>
+        <div id="ticketsList">Loading...</div>
     </div>
 
     <!-- Cars Panel -->
     <div class="tickets-panel" id="carsPanel">
-        <h2>🚗 Car Tickets</h2>
-        <div id="carsList"><div class="loading">Loading car tickets...</div></div>
+        <h2>🚗 ကားလက်မှတ်များ</h2>
+        <div id="carsList">Loading...</div>
+    </div>
+
+    <div class="legend" id="propertyLegend">
+        <div class="legend-title">မြေပုံအညွှန်း</div>
+        <div class="legend-item">
+            <div class="legend-marker">$</div>
+            <span>အိမ်ခြံမြေတည်နေရာနှင့် ဈေးနှုန်း</span>
+        </div>
     </div>
 
     <!-- Add Property Modal -->
     <div id="addPropertyModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Post Property</h2>
+                <h2>အိမ်ခြံမြေတင်ရန်</h2>
                 <button class="close-btn" onclick="closeAddPropertyModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="propertyForm" onsubmit="submitProperty(event)">
                     <div class="form-group">
-                        <label>Title *</label>
-                        <input type="text" id="title" required>
+                        <label>ခေါင်းစဉ် *</label>
+                        <input type="text" id="title" required placeholder="ဥပမာ - မြို့လယ်ခေတ်မီဆိုင်ခန်း">
                     </div>
 
                     <div class="form-group">
-                        <label>Price (Lakh) *</label>
-                        <input type="number" id="price" required>
-                        <div class="helper-text">Enter in lakh (100,000)</div>
+                        <label>စျေးနှုန်း (သိန်း) *</label>
+                        <input type="number" id="price" required placeholder="ဥပမာ - 3500">
+                        <div class="helper-text">သိန်းဖြင့်ဖြည့်ပါ</div>
                     </div>
 
                     <div class="form-group">
-                        <label>Full Address (for map) *</label>
-                        <input type="text" id="fullAddress" required>
+                        <label>လိပ်စာအပြည့်အစုံ *</label>
+                        <input type="text" id="fullAddress" required placeholder="ဥပမာ - ရေးလမ်း၊ ထားဝယ်">
+                        <div class="helper-text">🔍 စတင်ရိုက်ပါ၊ တည်နေရာများပေါ်လာပါမည်</div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Bedrooms</label>
+                            <label>အိပ်ခန်း</label>
                             <input type="number" id="beds" min="0" value="2">
                         </div>
                         <div class="form-group">
-                            <label>Bathrooms</label>
+                            <label>ရေချိုးခန်း</label>
                             <input type="number" id="baths" min="0" value="1">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Square Feet</label>
-                        <input type="number" id="sqft" min="0">
+                        <label>စတုရန်းပေ</label>
+                        <input type="number" id="sqft" min="0" placeholder="ဥပမာ - 1500">
                     </div>
 
                     <div class="form-group">
-                        <label>Description *</label>
-                        <textarea id="description" required rows="3"></textarea>
+                        <label>အသေးစိတ် *</label>
+                        <textarea id="description" required placeholder="သင့်အိမ်ခြံမြေ၏ အင်္ဂါရပ်များကို ဖော်ပြပါ..."></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label>Contact Phone *</label>
-                        <input type="tel" id="contactPhone" required>
+                        <label>ဆက်သွယ်ရန် အမည် *</label>
+                        <input type="text" id="contactName" required placeholder="သင့်အမည်">
                     </div>
 
                     <div class="form-group">
-                        <label>Image URL *</label>
-                        <input type="url" id="imageUrl" required>
+                        <label>ဖုန်းနံပါတ် *</label>
+                        <input type="tel" id="contactPhone" required placeholder="09-123-456-789">
                     </div>
 
-                    <button type="submit" class="btn-primary">📤 Post Property</button>
+                    <div class="form-group">
+                        <label>ပုံ *</label>
+                        <input type="file" id="imageFile" accept="image/*" required onchange="previewImage(event)">
+                        <div class="helper-text">သင့်ဖုန်း သို့မဟုတ် ကွန်ပျူတာမှ ပုံရွေးချယ်ပါ</div>
+                        <div id="imagePreview" style="margin-top: 12px; display: none;">
+                            <img id="previewImg" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px;" />
+                        </div>
+                        <div id="uploadProgress" style="display: none; margin-top: 8px;">
+                            <div style="background: #e5e7eb; border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div id="progressBar" style="background: #3B82F6; height: 100%; width: 0%; transition: width 0.3s;"></div>
+                            </div>
+                            <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Uploading... <span id="progressText">0%</span></p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">📤 တင်မည်</button>
                 </form>
             </div>
         </div>
@@ -476,49 +532,49 @@
     <div id="addTicketModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Post Air Ticket</h2>
+                <h2>လေယာဉ်လက်မှတ်တင်ရန်</h2>
                 <button class="close-btn" onclick="closeAddTicketModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="ticketForm" onsubmit="submitTicket(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>From *</label>
-                            <input type="text" id="ticketFrom" required>
+                            <label>မှ *</label>
+                            <input type="text" id="ticketFrom" required placeholder="ရန်ကုန်">
                         </div>
                         <div class="form-group">
-                            <label>To *</label>
-                            <input type="text" id="ticketTo" required>
+                            <label>သို့ *</label>
+                            <input type="text" id="ticketTo" required placeholder="ဘန်ကောက်">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Departure Date *</label>
+                            <label>ထွက်ခွာမည့်ရက် *</label>
                             <input type="date" id="ticketDepartDate" required>
                         </div>
                         <div class="form-group">
-                            <label>Return Date</label>
+                            <label>ပြန်လာမည့်ရက်</label>
                             <input type="date" id="ticketReturnDate">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Airline</label>
-                        <input type="text" id="ticketAirline">
+                        <label>လေကြောင်းလိုင်း</label>
+                        <input type="text" id="ticketAirline" placeholder="မြန်မာအေးယားဝေး">
                     </div>
 
                     <div class="form-group">
-                        <label>Price (MMK) *</label>
-                        <input type="number" id="ticketPrice" required>
+                        <label>စျေးနှုန်း (ကျပ်) *</label>
+                        <input type="number" id="ticketPrice" required placeholder="250000">
                     </div>
 
                     <div class="form-group">
-                        <label>Contact Phone *</label>
-                        <input type="tel" id="ticketPhone" required>
+                        <label>ဖုန်းနံပါတ် *</label>
+                        <input type="tel" id="ticketPhone" required placeholder="09-123-456-789">
                     </div>
 
-                    <button type="submit" class="btn-primary">✈️ Post Ticket</button>
+                    <button type="submit" class="btn btn-primary">✈️ တင်မည်</button>
                 </form>
             </div>
         </div>
@@ -528,59 +584,59 @@
     <div id="addCarModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Post Car Ticket</h2>
+                <h2>ကားလက်မှတ်တင်ရန်</h2>
                 <button class="close-btn" onclick="closeAddCarModal()">×</button>
             </div>
             <div class="modal-body">
                 <form id="carForm" onsubmit="submitCar(event)">
                     <div class="form-row">
                         <div class="form-group">
-                            <label>From *</label>
-                            <input type="text" id="carFrom" required>
+                            <label>မှ *</label>
+                            <input type="text" id="carFrom" required placeholder="ရန်ကုန်">
                         </div>
                         <div class="form-group">
-                            <label>To *</label>
-                            <input type="text" id="carTo" required>
+                            <label>သို့ *</label>
+                            <input type="text" id="carTo" required placeholder="မန္တလေး">
                         </div>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Departure Date *</label>
+                            <label>ထွက်ခွာမည့်ရက် *</label>
                             <input type="date" id="carDepartDate" required>
                         </div>
                         <div class="form-group">
-                            <label>Departure Time *</label>
+                            <label>ထွက်ခွာမည့်အချိန် *</label>
                             <input type="time" id="carDepartTime" required>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Car Type *</label>
+                        <label>ကားအမျိုးအစား *</label>
                         <select id="carType" required>
-                            <option value="sedan">Sedan</option>
+                            <option value="sedan">ဆီဒန်</option>
                             <option value="suv">SUV</option>
-                            <option value="van">Van</option>
-                            <option value="bus">Bus</option>
+                            <option value="van">ဗန်</option>
+                            <option value="bus">ဘတ်စ်ကား</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Available Seats *</label>
-                        <input type="number" id="carSeats" required min="1">
+                        <label>လက်ကျန်ခုံနေရာ *</label>
+                        <input type="number" id="carSeats" required min="1" placeholder="4">
                     </div>
 
                     <div class="form-group">
-                        <label>Price per Person (MMK) *</label>
-                        <input type="number" id="carPrice" required>
+                        <label>စျေးနှုန်း (ကျပ်) *</label>
+                        <input type="number" id="carPrice" required placeholder="25000">
                     </div>
 
                     <div class="form-group">
-                        <label>Contact Phone *</label>
-                        <input type="tel" id="carPhone" required>
+                        <label>ဖုန်းနံပါတ် *</label>
+                        <input type="tel" id="carPhone" required placeholder="09-123-456-789">
                     </div>
 
-                    <button type="submit" class="btn-primary">🚗 Post Car Ticket</button>
+                    <button type="submit" class="btn btn-primary">🚗 တင်မည်</button>
                 </form>
             </div>
         </div>
@@ -593,8 +649,20 @@
         const SUPABASE_URL = 'https://zrhslpbtzddtgdifzdhj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpyaHNscGJ0emRkdGdkaWZ6ZGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjExNjgwMzMsImV4cCI6MjA3Njc0NDAzM30.r7ylCuNq23tpCctb1MibwHAxU-P549lvDKkqxhalq9s';
         
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase = null;
+        
+        // Only initialize Supabase if configured
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY_HERE') {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase initialized');
+            } catch (error) {
+                console.error('❌ Supabase initialization error:', error);
+                alert('Supabase configuration error. Please check your URL and API key.');
+            }
+        } else {
+            console.warn('⚠️ Supabase not configured - using demo mode');
+        }
 
         // ============================================
         // GLOBAL VARIABLES
@@ -603,122 +671,122 @@
         let geocoder;
         let infoWindow;
         let markers = [];
+        let autocomplete;
         let currentCategory = 'properties';
-        let currentUser = null;
 
         // ============================================
         // INITIALIZATION
         // ============================================
-        async function initApp() {
+        let mapInitialized = false;
+
+        function initMap() {
+            if (mapInitialized) return;
+            
+            console.log('Attempting to initialize map...');
+
             // Check if Supabase is configured
-            if (SUPABASE_URL === 'https://zrhslpbtzddtgdifzdhj.supabase.co') {
+            if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE') {
                 console.warn('⚠️ Supabase not configured');
-                document.getElementById('setupNotice').classList.add('active');
+                document.getElementById('itemCount').innerHTML = '<span>⚙️</span><span>Setup Supabase first</span>';
+                // Still show map even without Supabase
+            } else {
+                document.getElementById('setupNotice').style.display = 'none';
+            }
+
+            // Check if Google Maps is loaded
+            if (typeof google === 'undefined' || !google.maps) {
+                console.error('❌ Google Maps not loaded yet, waiting...');
                 return;
             }
 
-            // Initialize map
-            initMap();
+            try {
+                console.log('✅ Google Maps API available, creating map...');
+                
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 14.0825, lng: 98.1892 },
+                    zoom: 14,
+                    mapTypeControl: true,
+                    streetViewControl: true,
+                    fullscreenControl: true,
+                });
 
-            // Check for existing session
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                currentUser = session.user;
-                showUserProfile();
-            }
+                geocoder = new google.maps.Geocoder();
+                infoWindow = new google.maps.InfoWindow();
 
-            // Listen for auth changes
-            supabase.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN') {
-                    currentUser = session.user;
-                    showUserProfile();
-                } else if (event === 'SIGNED_OUT') {
-                    currentUser = null;
-                    hideUserProfile();
+                console.log('✅ Map created successfully!');
+                mapInitialized = true;
+
+                // Initialize autocomplete for address input
+                setTimeout(function() {
+                    const addressInput = document.getElementById('fullAddress');
+                    if (addressInput && google.maps.places) {
+                        autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                            componentRestrictions: { country: 'mm' },
+                            fields: ['formatted_address', 'geometry', 'name'],
+                            types: ['geocode', 'establishment']
+                        });
+
+                        // Set bias to Dawei region
+                        const daweiCircle = new google.maps.Circle({
+                            center: { lat: 14.0825, lng: 98.1892 },
+                            radius: 50000
+                        });
+                        autocomplete.setBounds(daweiCircle.getBounds());
+
+                        console.log('✅ Autocomplete initialized');
+                    }
+                }, 1000);
+
+                // Load properties if Supabase is configured
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL_HERE') {
+                    loadProperties();
+                } else {
+                    document.getElementById('itemCount').innerHTML = '<span>📍</span><span>Configure Supabase to load data</span>';
                 }
-            });
 
-            // Load initial data
-            loadProperties();
+            } catch (error) {
+                console.error('❌ Error initializing map:', error);
+                alert('Failed to initialize map: ' + error.message);
+            }
         }
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 14.0825, lng: 98.1892 },
-                zoom: 14,
-                mapTypeControl: true,
-                streetViewControl: true,
-                fullscreenControl: true,
-            });
-
-            geocoder = new google.maps.Geocoder();
-            infoWindow = new google.maps.InfoWindow();
-        }
-
-        // ============================================
-        // AUTHENTICATION
-        // ============================================
-        async function signUpWithEmail() {
-            const email = prompt('Enter your email:');
-            const password = prompt('Create a password (min 6 characters):');
+        // Try multiple times to initialize
+        function tryInitMap() {
+            console.log('Checking if Google Maps is ready...');
             
-            if (!email || !password) return;
-
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert('Sign up error: ' + error.message);
+            if (typeof google !== 'undefined' && google.maps) {
+                console.log('✅ Google Maps ready!');
+                initMap();
             } else {
-                alert('✅ Check your email to confirm your account!');
+                console.log('⏳ Waiting for Google Maps...');
+                setTimeout(tryInitMap, 100);
             }
         }
 
-        async function signInWithEmail() {
-            const email = prompt('Enter your email:');
-            const password = prompt('Enter your password:');
-            
-            if (!email || !password) return;
+        // Start when page loads
+        window.addEventListener('load', function() {
+            console.log('🚀 Page loaded, starting map initialization...');
+            tryInitMap();
+        });
 
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                alert('Sign in error: ' + error.message);
-            } else {
-                alert('✅ Signed in successfully!');
+        // Backup: Try after a delay
+        setTimeout(function() {
+            if (!mapInitialized) {
+                console.log('🔄 Backup initialization attempt...');
+                tryInitMap();
             }
-        }
-
-        async function signOut() {
-            const { error } = await supabase.auth.signOut();
-            if (!error) {
-                alert('Signed out successfully');
-            }
-        }
-
-        function showUserProfile() {
-            document.getElementById('userProfile').classList.add('active');
-            document.getElementById('userName').textContent = currentUser.email.split('@')[0];
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('loginBtn').style.display = 'none';
-            document.getElementById('signupBtn').style.display = 'none';
-        }
-
-        function hideUserProfile() {
-            document.getElementById('userProfile').classList.remove('active');
-            document.getElementById('loginBtn').style.display = 'block';
-            document.getElementById('signupBtn').style.display = 'block';
-        }
+        }, 2000);
 
         // ============================================
         // PROPERTIES
         // ============================================
         async function loadProperties() {
+            if (!supabase) {
+                console.warn('Supabase not configured - skipping data load');
+                document.getElementById('itemCount').innerHTML = '<span>📍</span><span>0 properties (Demo mode)</span>';
+                return;
+            }
+
             const { data, error } = await supabase
                 .from('properties')
                 .select('*')
@@ -726,18 +794,16 @@
 
             if (error) {
                 console.error('Error loading properties:', error);
-                document.getElementById('itemCount').textContent = 'Error loading properties';
+                document.getElementById('itemCount').innerHTML = '<span>❌</span><span>Error loading data</span>';
                 return;
             }
 
-            // Clear existing markers
             markers.forEach(m => m.setMap(null));
             markers = [];
 
-            // Add markers
             data.forEach(property => addMarkerToMap(property));
 
-            document.getElementById('itemCount').textContent = `📍 ${data.length} properties`;
+            document.getElementById('itemCount').innerHTML = `<span>📍</span><span>${data.length} properties</span>`;
         }
 
         function addMarkerToMap(property) {
@@ -773,15 +839,16 @@
                 <div style="padding: 10px; max-width: 250px;">
                     <img src="${property.image_url}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />
                     <h3 style="margin: 0 0 8px 0; font-size: 16px;">${property.title}</h3>
-                    <p style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; color: #3B82F6;">${property.price} lakh</p>
+                    <p style="margin: 0 0 8px 0; font-size: 24px; font-weight: 700; color: #3B82F6;">${property.price} သိန်း</p>
                     <p style="margin: 0 0 4px 0; font-size: 14px; color: #6b7280;">${property.address}</p>
-                    <div style="display: flex; gap: 12px; font-size: 14px; color: #6b7280;">
+                    <div style="display: flex; gap: 12px; font-size: 14px; color: #6b7280; margin-bottom: 8px;">
                         <span>🛏️ ${property.beds}</span>
                         <span>🚿 ${property.baths}</span>
                         <span>📏 ${property.sqft || 'N/A'} sqft</span>
                     </div>
-                    <p style="margin-top: 8px; font-size: 13px;">${property.description.substring(0, 100)}...</p>
-                    <p style="margin-top: 8px; font-size: 14px; font-weight: 600;">📞 ${property.contact_phone}</p>
+                    <p style="margin: 8px 0; font-size: 13px;">${property.description.substring(0, 100)}...</p>
+                    <p style="margin-top: 8px; font-size: 14px;"><strong>📞 ${property.contact_phone}</strong></p>
+                    <p style="margin-top: 4px; font-size: 12px;">👤 ${property.contact_name}</p>
                 </div>
             `;
             infoWindow.setContent(content);
@@ -791,14 +858,51 @@
         async function submitProperty(event) {
             event.preventDefault();
 
-            if (!currentUser) {
-                alert('Please sign in to post properties');
+            if (!supabase) {
+                alert('⚠️ Supabase not configured! Please add your Supabase URL and API key to enable posting.');
                 return;
             }
 
+            const imageFile = document.getElementById('imageFile').files[0];
+            if (!imageFile) {
+                alert('ပုံရွေးချယ်ပေးပါ');
+                return;
+            }
+
+            // Show upload progress
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('progressBar').style.width = '30%';
+            document.getElementById('progressText').textContent = '30%';
+
+            // Upload image to Supabase Storage
+            const fileExt = imageFile.name.split('.').pop();
+            const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+            const filePath = `properties/${fileName}`;
+
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('property-images')
+                .upload(filePath, imageFile);
+
+            if (uploadError) {
+                alert('ပုံတင်ရာတွင် အမှားအယွင်းဖြစ်ပွားသည်: ' + uploadError.message);
+                document.getElementById('uploadProgress').style.display = 'none';
+                console.error(uploadError);
+                return;
+            }
+
+            document.getElementById('progressBar').style.width = '60%';
+            document.getElementById('progressText').textContent = '60%';
+
+            // Get public URL
+            const { data: { publicUrl } } = supabase.storage
+                .from('property-images')
+                .getPublicUrl(filePath);
+
+            document.getElementById('progressBar').style.width = '80%';
+            document.getElementById('progressText').textContent = '80%';
+
             const address = document.getElementById('fullAddress').value;
 
-            // Geocode address
             geocoder.geocode({ address: address }, async (results, status) => {
                 if (status === 'OK') {
                     const location = results[0].geometry.location;
@@ -808,30 +912,36 @@
                         .insert([
                             {
                                 title: document.getElementById('title').value,
-                                price: document.getElementById('price').value,
+                                price: parseInt(document.getElementById('price').value),
                                 address: address,
-                                beds: document.getElementById('beds').value,
-                                baths: document.getElementById('baths').value,
-                                sqft: document.getElementById('sqft').value,
+                                beds: parseInt(document.getElementById('beds').value),
+                                baths: parseInt(document.getElementById('baths').value),
+                                sqft: parseInt(document.getElementById('sqft').value) || 0,
                                 description: document.getElementById('description').value,
+                                contact_name: document.getElementById('contactName').value,
                                 contact_phone: document.getElementById('contactPhone').value,
-                                image_url: document.getElementById('imageUrl').value,
+                                image_url: publicUrl,
                                 lat: location.lat(),
-                                lng: location.lng(),
-                                user_id: currentUser.id
+                                lng: location.lng()
                             }
                         ]);
 
+                    document.getElementById('progressBar').style.width = '100%';
+                    document.getElementById('progressText').textContent = '100%';
+
                     if (error) {
                         alert('Error posting property: ' + error.message);
+                        console.error(error);
                     } else {
-                        alert('✅ Property posted successfully!');
+                        alert('✅ အိမ်ခြံမြေ တင်ပြီးပါပြီ!');
                         closeAddPropertyModal();
                         loadProperties();
                     }
                 } else {
-                    alert('Could not geocode address. Please try a different address.');
+                    alert('မြေပုံတွင် မတွေ့ပါ။ တခြားလိပ်စာဖြင့် ထပ်စမ်းကြည့်ပါ။');
                 }
+                
+                document.getElementById('uploadProgress').style.display = 'none';
             });
         }
 
@@ -846,36 +956,31 @@
 
             if (error) {
                 console.error('Error loading tickets:', error);
-                document.getElementById('ticketsList').innerHTML = '<div class="loading">Error loading tickets</div>';
+                document.getElementById('ticketsList').innerHTML = '<p style="color: #ef4444;">Error loading tickets</p>';
                 return;
             }
 
             const container = document.getElementById('ticketsList');
             if (data.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center;">No air tickets yet</p>';
+                container.innerHTML = '<p style="color: #6b7280;">လေယာဉ်လက်မှတ်မရှိသေးပါ</p>';
                 return;
             }
 
             container.innerHTML = data.map(ticket => `
                 <div class="ticket-card">
                     <div class="ticket-route">${ticket.from_city} → ${ticket.to_city}</div>
-                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">📅 ${new Date(ticket.depart_date).toLocaleDateString()}</div>
+                    <div class="ticket-date">📅 ${formatDate(ticket.depart_date)}${ticket.return_date ? ' - ' + formatDate(ticket.return_date) : ''}</div>
                     <div class="ticket-price">${ticket.price.toLocaleString()} MMK</div>
-                    ${ticket.airline ? `<div style="font-size: 13px; color: #6b7280;">✈️ ${ticket.airline}</div>` : ''}
-                    <div style="font-size: 14px; margin-top: 8px; font-weight: 600;">📞 ${ticket.contact_phone}</div>
+                    ${ticket.airline ? `<div class="ticket-seller">✈️ ${ticket.airline}</div>` : ''}
+                    <div class="ticket-seller">📞 ${ticket.contact_phone}</div>
                 </div>
             `).join('');
 
-            document.getElementById('itemCount').textContent = `✈️ ${data.length} air tickets`;
+            document.getElementById('itemCount').innerHTML = `<span>✈️</span><span>${data.length} air tickets</span>`;
         }
 
         async function submitTicket(event) {
             event.preventDefault();
-
-            if (!currentUser) {
-                alert('Please sign in to post tickets');
-                return;
-            }
 
             const { data, error } = await supabase
                 .from('air_tickets')
@@ -885,17 +990,17 @@
                         to_city: document.getElementById('ticketTo').value,
                         depart_date: document.getElementById('ticketDepartDate').value,
                         return_date: document.getElementById('ticketReturnDate').value || null,
-                        airline: document.getElementById('ticketAirline').value,
-                        price: document.getElementById('ticketPrice').value,
-                        contact_phone: document.getElementById('ticketPhone').value,
-                        user_id: currentUser.id
+                        airline: document.getElementById('ticketAirline').value || null,
+                        price: parseInt(document.getElementById('ticketPrice').value),
+                        contact_phone: document.getElementById('ticketPhone').value
                     }
                 ]);
 
             if (error) {
                 alert('Error posting ticket: ' + error.message);
+                console.error(error);
             } else {
-                alert('✅ Air ticket posted successfully!');
+                alert('✅ လေယာဉ်လက်မှတ် တင်ပြီးပါပြီ!');
                 closeAddTicketModal();
                 loadTickets();
             }
@@ -912,37 +1017,32 @@
 
             if (error) {
                 console.error('Error loading cars:', error);
-                document.getElementById('carsList').innerHTML = '<div class="loading">Error loading car tickets</div>';
+                document.getElementById('carsList').innerHTML = '<p style="color: #ef4444;">Error loading car tickets</p>';
                 return;
             }
 
             const container = document.getElementById('carsList');
             if (data.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center;">No car tickets yet</p>';
+                container.innerHTML = '<p style="color: #6b7280;">ကားလက်မှတ်မရှိသေးပါ</p>';
                 return;
             }
 
             container.innerHTML = data.map(car => `
                 <div class="ticket-card">
                     <div class="ticket-route">${car.from_city} → ${car.to_city}</div>
-                    <div style="font-size: 14px; color: #6b7280; margin-bottom: 8px;">📅 ${new Date(car.depart_date).toLocaleDateString()} at ${car.depart_time}</div>
+                    <div class="ticket-date">📅 ${formatDate(car.depart_date)} at ${car.depart_time}</div>
                     <div class="ticket-price">${car.price.toLocaleString()} MMK/person</div>
-                    <div style="font-size: 13px; color: #6b7280;">🚗 ${car.car_type.charAt(0).toUpperCase() + car.car_type.slice(1)}</div>
-                    <div style="font-size: 13px; color: #6b7280;">💺 ${car.seats} seats available</div>
-                    <div style="font-size: 14px; margin-top: 8px; font-weight: 600;">📞 ${car.contact_phone}</div>
+                    <div class="ticket-seller">🚗 ${car.car_type.charAt(0).toUpperCase() + car.car_type.slice(1)}</div>
+                    <div class="ticket-seller">💺 ${car.seats} seats</div>
+                    <div class="ticket-seller">📞 ${car.contact_phone}</div>
                 </div>
             `).join('');
 
-            document.getElementById('itemCount').textContent = `🚗 ${data.length} car tickets`;
+            document.getElementById('itemCount').innerHTML = `<span>🚗</span><span>${data.length} car tickets</span>`;
         }
 
         async function submitCar(event) {
             event.preventDefault();
-
-            if (!currentUser) {
-                alert('Please sign in to post car tickets');
-                return;
-            }
 
             const { data, error } = await supabase
                 .from('car_tickets')
@@ -953,17 +1053,17 @@
                         depart_date: document.getElementById('carDepartDate').value,
                         depart_time: document.getElementById('carDepartTime').value,
                         car_type: document.getElementById('carType').value,
-                        seats: document.getElementById('carSeats').value,
-                        price: document.getElementById('carPrice').value,
-                        contact_phone: document.getElementById('carPhone').value,
-                        user_id: currentUser.id
+                        seats: parseInt(document.getElementById('carSeats').value),
+                        price: parseInt(document.getElementById('carPrice').value),
+                        contact_phone: document.getElementById('carPhone').value
                     }
                 ]);
 
             if (error) {
                 alert('Error posting car ticket: ' + error.message);
+                console.error(error);
             } else {
-                alert('✅ Car ticket posted successfully!');
+                alert('✅ ကားလက်မှတ် တင်ပြီးပါပြီ!');
                 closeAddCarModal();
                 loadCars();
             }
@@ -975,31 +1075,31 @@
         function switchCategory(category) {
             currentCategory = category;
             
-            // Update tab buttons
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Hide all panels
             document.getElementById('ticketsPanel').classList.remove('active');
             document.getElementById('carsPanel').classList.remove('active');
             
-            // Hide all buttons
             document.getElementById('addPropertyBtn').style.display = 'none';
             document.getElementById('addTicketBtn').style.display = 'none';
             document.getElementById('addCarBtn').style.display = 'none';
             
             if (category === 'properties') {
                 document.getElementById('addPropertyBtn').style.display = 'block';
+                document.getElementById('propertyLegend').style.display = 'block';
                 markers.forEach(m => m.setMap(map));
                 loadProperties();
             } else if (category === 'tickets') {
                 document.getElementById('addTicketBtn').style.display = 'block';
                 document.getElementById('ticketsPanel').classList.add('active');
+                document.getElementById('propertyLegend').style.display = 'none';
                 markers.forEach(m => m.setMap(null));
                 loadTickets();
             } else {
                 document.getElementById('addCarBtn').style.display = 'block';
                 document.getElementById('carsPanel').classList.add('active');
+                document.getElementById('propertyLegend').style.display = 'none';
                 markers.forEach(m => m.setMap(null));
                 loadCars();
             }
@@ -1009,23 +1109,17 @@
         // MODAL CONTROLS
         // ============================================
         function openAddPropertyModal() {
-            if (!currentUser) {
-                alert('Please sign in to post properties');
-                return;
-            }
             document.getElementById('addPropertyModal').classList.add('active');
         }
 
         function closeAddPropertyModal() {
             document.getElementById('addPropertyModal').classList.remove('active');
             document.getElementById('propertyForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('uploadProgress').style.display = 'none';
         }
 
         function openAddTicketModal() {
-            if (!currentUser) {
-                alert('Please sign in to post tickets');
-                return;
-            }
             document.getElementById('addTicketModal').classList.add('active');
         }
 
@@ -1035,10 +1129,6 @@
         }
 
         function openAddCarModal() {
-            if (!currentUser) {
-                alert('Please sign in to post car tickets');
-                return;
-            }
             document.getElementById('addCarModal').classList.add('active');
         }
 
@@ -1047,7 +1137,6 @@
             document.getElementById('carForm').reset();
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('active');
@@ -1055,16 +1144,24 @@
         }
 
         // ============================================
-        // START THE APP
+        // HELPER FUNCTIONS
         // ============================================
-        window.addEventListener('load', () => {
-            // Wait for Google Maps to load
-            if (typeof google !== 'undefined') {
-                initApp();
-            } else {
-                setTimeout(initApp, 1000);
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                }
+                reader.readAsDataURL(file);
             }
-        });
+        }
     </script>
 </body>
 </html>
