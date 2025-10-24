@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Myanmar Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pyidaungsu', 'Myanmar Text', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .offline-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .retry-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .features {
+            margin-top: 30px;
+            text-align: left;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .feature-item {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        .feature-item::before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">📡</div>
+        <h1>သင်သည် အော့ဖ်လိုင်းဖြစ်နေပါသည်</h1>
+        <h2 style="color: #999; margin-bottom: 15px;">You're Offline</h2>
+        <p>အင်တာနက်ချိတ်ဆက်မှု ရှိမရှိ စစ်ဆေးပြီး ထပ်စမ်းကြည့်ပါ။</p>
+        <p style="font-size: 14px;">Please check your internet connection and try again.</p>
+        
+        <button class="retry-btn" onclick="location.reload()">🔄 Retry / ထပ်စမ်းကြည့်မည်</button>
+
+        <div class="features">
+            <h3 style="margin-bottom: 15px; color: #333;">📱 PWA Features:</h3>
+            <div class="feature-item">Works offline (limited)</div>
+            <div class="feature-item">Install as mobile app</div>
+            <div class="feature-item">Fast loading</div>
+            <div class="feature-item">Push notifications</div>
+            <div class="feature-item">Home screen icon</div>
+        </div>
+    </div>
+
+    <script>
+        // Check if online every 5 seconds
+        setInterval(() => {
+            if (navigator.onLine) {
+                location.reload();
+            }
+        }, 5000);
+
+        // Listen for online event
+        window.addEventListener('online', () => {
+            location.reload();
+        });
+    </script>
+</body>
+</html>
