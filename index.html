@@ -905,93 +905,49 @@
                 <input type="text" class="search-input" placeholder="ရှာဖွေရန်..." id="searchInput">
                 <button class="search-btn" onclick="searchItems()">🔍</button>
             </div>
-            <div class="cart-icon" onclick="toggleCart()">
-                🛒
-                <span class="cart-count" id="cartCount">0</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <!-- Small Download Buttons -->
+                <button onclick="triggerInstallFromBanner()" style="
+                    background: #000;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    transition: transform 0.2s;
+                " title="Get it on Android">
+                    <span style="font-size: 16px;">🤖</span>
+                    <span>Android</span>
+                </button>
+
+                <button onclick="showIOSInstructions()" style="
+                    background: #000;
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-size: 11px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    transition: transform 0.2s;
+                " title="Download on iPhone">
+                    <span style="font-size: 16px;">🍎</span>
+                    <span>iOS</span>
+                </button>
+
+                <div class="cart-icon" onclick="toggleCart()">
+                    🛒
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
             </div>
         </div>
     </header>
-
-    <!-- App Download Banner -->
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; color: white;">
-        <h2 style="font-size: 28px; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">📱 Get Our Mobile App</h2>
-        <p style="font-size: 16px; margin-bottom: 25px; opacity: 0.95;">
-            Install now for faster access, offline mode, and app-like experience!<br>
-            <span style="font-size: 18px;">အက်ပ်တပ်ဆင်ပြီး offline ဖြင့် အသုံးပြုနိုင်ပါသည်!</span>
-        </p>
-        
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px;">
-            <!-- Main Install Button -->
-            <button id="mainInstallBtnTop" onclick="triggerInstallFromBanner()" style="
-                background: white;
-                color: #667eea;
-                border: none;
-                padding: 15px 40px;
-                border-radius: 30px;
-                font-size: 18px;
-                font-weight: bold;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                transition: all 0.3s;
-            ">
-                <span style="font-size: 24px;">📲</span>
-                <span>Install App Now</span>
-            </button>
-
-            <!-- Android Style Button -->
-            <button onclick="triggerInstallFromBanner()" style="
-                background: #000;
-                color: white;
-                border: none;
-                padding: 12px 30px;
-                border-radius: 8px;
-                font-size: 14px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                transition: all 0.3s;
-            ">
-                <span style="font-size: 20px;">🤖</span>
-                <div style="text-align: left;">
-                    <div style="font-size: 10px; opacity: 0.8;">GET IT ON</div>
-                    <div style="font-size: 16px; font-weight: bold;">Android</div>
-                </div>
-            </button>
-
-            <!-- iOS Style Button -->
-            <button onclick="showIOSInstructions()" style="
-                background: #000;
-                color: white;
-                border: none;
-                padding: 12px 30px;
-                border-radius: 8px;
-                font-size: 14px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                transition: all 0.3s;
-            ">
-                <span style="font-size: 20px;">🍎</span>
-                <div style="text-align: left;">
-                    <div style="font-size: 10px; opacity: 0.8;">Download on</div>
-                    <div style="font-size: 16px; font-weight: bold;">iPhone</div>
-                </div>
-            </button>
-        </div>
-
-        <!-- Benefits -->
-        <div style="display: flex; gap: 25px; justify-content: center; flex-wrap: wrap; font-size: 14px; opacity: 0.95;">
-            <span>✓ Works Offline</span>
-            <span>✓ Fast Loading</span>
-            <span>✓ Push Notifications</span>
-            <span>✓ Home Screen Icon</span>
-        </div>
-    </div>
 
     <!-- Main Categories -->
     <div class="main-categories">
@@ -2499,15 +2455,9 @@
             e.preventDefault();
             deferredPrompt = e;
             installButton.style.display = 'block';
-            
-            // Also show banner buttons
-            const mainInstallBtnTop = document.getElementById('mainInstallBtnTop');
-            if (mainInstallBtnTop) {
-                mainInstallBtnTop.style.display = 'flex';
-            }
         });
 
-        // Function to trigger install from banner buttons
+        // Function to trigger install from header buttons
         async function triggerInstallFromBanner() {
             if (!deferredPrompt) {
                 showNotification('Install prompt not available. Please try again or use browser menu → Install App');
@@ -2521,12 +2471,6 @@
             }
             deferredPrompt = null;
             installButton.style.display = 'none';
-            
-            // Hide banner buttons
-            const mainInstallBtnTop = document.getElementById('mainInstallBtnTop');
-            if (mainInstallBtnTop) {
-                mainInstallBtnTop.parentElement.style.display = 'none';
-            }
         }
 
         // Function to show iOS installation instructions
@@ -2535,14 +2479,9 @@
             const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             
             if (isIOS && isSafari) {
-                showNotification(`
-                    📱 To install on iPhone:
-                    1. Tap the Share button (⬆️)
-                    2. Scroll down and tap "Add to Home Screen"
-                    3. Tap "Add"
-                `);
+                alert('📱 To install on iPhone:\n\n1. Tap the Share button (⬆️)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add"');
             } else if (isIOS) {
-                showNotification('Please open this site in Safari browser to install on iPhone');
+                alert('Please open this site in Safari browser to install on iPhone');
             } else {
                 // Not iOS, trigger regular install
                 triggerInstallFromBanner();
@@ -2562,26 +2501,12 @@
             console.log('PWA was installed');
             showNotification('App installed successfully! 🎉');
             installButton.style.display = 'none';
-            
-            // Hide banner buttons
-            const mainInstallBtnTop = document.getElementById('mainInstallBtnTop');
-            if (mainInstallBtnTop && mainInstallBtnTop.parentElement) {
-                mainInstallBtnTop.parentElement.style.display = 'none';
-            }
         });
 
         // Check if app is already installed
         if (window.matchMedia('(display-mode: standalone)').matches) {
             console.log('Running as installed PWA');
             installButton.style.display = 'none';
-            
-            // Hide banner completely if already installed
-            setTimeout(() => {
-                const mainInstallBtnTop = document.getElementById('mainInstallBtnTop');
-                if (mainInstallBtnTop && mainInstallBtnTop.parentElement && mainInstallBtnTop.parentElement.parentElement) {
-                    mainInstallBtnTop.parentElement.parentElement.style.display = 'none';
-                }
-            }, 100);
         }
 
         // Add pulse animation for install button
